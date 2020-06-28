@@ -1,0 +1,24 @@
+{
+  "name": "@mikhailbalin/mbtools",
+  "version": "1.0.0",
+  "description": "A CLI to bootstrap my new projects",
+  "main": "src/index.js",
+  "bin": {
+    "mbtools": "bin/mbtools"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli",
+    "mbtools"
+  ],
+  "author": "Misha Balin",
+  "license": "MIT",
+  "dependencies": {
+    "esm": "^3.2.25"
+  }
+}
