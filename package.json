@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A CLI to bootstrap my new projects",
   "main": "src/index.js",
+  "types": "build/types/types.d.ts",
   "bin": {
     "mbtools": "bin/mbtools"
   },
@@ -10,7 +11,10 @@
     "access": "public"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "format": "prettier --write **/*.{js,ts,tsx,json,md}",
+    "lint": "eslint '*/**/*.{js,ts,tsx}'",
+    "clean": "rimraf ./build",
+    "compile": "tsc -p ."
   },
   "keywords": [
     "cli",
@@ -18,7 +22,29 @@
   ],
   "author": "Misha Balin",
   "license": "MIT",
-  "dependencies": {
-    "esm": "^3.2.25"
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^14.0.14",
+    "@typescript-eslint/eslint-plugin": "^3.4.0",
+    "@typescript-eslint/parser": "^3.4.0",
+    "eslint": "^7.3.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "prettier": "^2.0.5",
+    "rimraf": "^3.0.2",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint --fix"
+    ]
   }
 }
