@@ -16,4 +16,8 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-var-requires': 'off',
   },
+  env: {
+    node: true,
+    jest: true,
+  },
 };

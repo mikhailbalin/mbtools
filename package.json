@@ -16,7 +16,9 @@
     "clean": "rimraf ./lib mbtools",
     "compile:ts": "tsc --project .",
     "compile:exec": "pkg ./lib/index.js --targets linux --output lib/exec/mbtools",
-    "build": "npm run clean && npm run compile:ts && npm run compile:exec"
+    "build": "npm run clean && npm run compile:ts && npm run compile:exec",
+    "test": "jest --watch",
+    "coverage": "jest --coverage"
   },
   "keywords": [
     "cli",
@@ -26,6 +28,7 @@
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
+    "@types/jest": "^26.0.3",
     "@types/node": "^14.0.14",
     "@typescript-eslint/eslint-plugin": "^3.4.0",
     "@typescript-eslint/parser": "^3.4.0",
@@ -33,10 +36,12 @@
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
     "husky": "^4.2.5",
+    "jest": "^26.1.0",
     "lint-staged": "^10.2.11",
     "pkg": "^4.4.9",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
+    "ts-jest": "^26.1.1",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.5"
   },
@@ -46,6 +51,10 @@
     "templates/",
     "tsconfig.json"
   ],
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"

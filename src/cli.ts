@@ -1,3 +1,3 @@
-export function run(args: any) {
+export function run(args: string[]) {
   console.log([...args]);
 }
