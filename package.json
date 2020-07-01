@@ -1,9 +1,9 @@
 {
-  "name": "@mikhailbalin/mbtools",
-  "version": "1.0.0",
-  "description": "A CLI to bootstrap my new projects",
-  "main": "src/index.js",
-  "types": "build/types/types.d.ts",
+  "name": "@mishabalin/mbtools",
+  "version": "0.0.1",
+  "description": "A CLI to bootstrap my dev tools",
+  "types": "lib/types",
+  "main": "lib/index.js",
   "bin": {
     "mbtools": "bin/mbtools"
   },
@@ -13,8 +13,10 @@
   "scripts": {
     "format": "prettier --write **/*.{js,ts,tsx,json,md}",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
-    "clean": "rimraf ./build",
-    "compile": "tsc -p ."
+    "clean": "rimraf ./lib mbtools",
+    "compile:ts": "tsc --project .",
+    "compile:exec": "pkg ./lib/index.js --targets linux --output lib/exec/mbtools",
+    "build": "npm run clean && npm run compile:ts && npm run compile:exec"
   },
   "keywords": [
     "cli",
@@ -32,11 +34,18 @@
     "eslint-plugin-prettier": "^3.1.4",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
+    "pkg": "^4.4.9",
     "prettier": "^2.0.5",
     "rimraf": "^3.0.2",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.5"
   },
+  "files": [
+    "bin/",
+    "lib/",
+    "templates/",
+    "tsconfig.json"
+  ],
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
@@ -45,6 +54,14 @@
   "lint-staged": {
     "*.{js,ts,tsx}": [
       "eslint --fix"
+    ]
+  },
+  "pkg": {
+    "assets": [
+      "./node_modules/@types",
+      "./node_modules/typescript/lib/*.d.ts",
+      "src/**/*.ts",
+      "./tsconfig.json"
     ]
   }
 }
