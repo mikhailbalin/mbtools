@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import inquirer from 'inquirer';
-import { TOptions } from './cli';
+import { TOptions } from './parseArgumentsIntoOptions';
 
 export default async function promptForMissingOptions(options: TOptions) {
   if (options.skipPrompts) return options;
