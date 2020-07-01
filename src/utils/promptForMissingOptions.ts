@@ -1,12 +1,28 @@
 import inquirer from 'inquirer';
 import { TOptions } from './parseArgumentsIntoOptions';
 
+const passwordValidator = async (input: string) => {
+  if (input === '') return 'Password should not be empty.';
+  return true;
+};
+
 export default async function promptForMissingOptions(options: TOptions) {
   if (options.skipPrompts) return options;
 
+  const { update, git, ssh, password } = options;
   const questions = [];
+  const isPasswordRequired = !(update || ssh) && !password;
 
-  if (!options.update) {
+  if (isPasswordRequired) {
+    questions.push({
+      type: 'password',
+      name: 'password',
+      message: 'WSL password?',
+      validate: passwordValidator,
+    });
+  }
+
+  if (!update) {
     questions.push({
       type: 'confirm',
       name: 'update',
@@ -15,7 +31,7 @@ export default async function promptForMissingOptions(options: TOptions) {
     });
   }
 
-  if (!options.git) {
+  if (!git) {
     questions.push({
       type: 'confirm',
       name: 'git',
@@ -24,7 +40,7 @@ export default async function promptForMissingOptions(options: TOptions) {
     });
   }
 
-  if (!options.ssh) {
+  if (!ssh) {
     questions.push({
       type: 'confirm',
       name: 'ssh',
@@ -37,8 +53,9 @@ export default async function promptForMissingOptions(options: TOptions) {
 
   return {
     ...options,
-    update: options.update || answers.update,
-    git: options.git || answers.git,
-    ssh: options.ssh || answers.ssh,
+    password: password || (answers.password as string),
+    update: update || (answers.update as boolean),
+    git: git || (answers.git as boolean),
+    ssh: ssh || (answers.ssh as boolean),
   };
 }
