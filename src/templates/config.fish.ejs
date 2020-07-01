@@ -1,0 +1,62 @@
+# Start ssh agent
+setenv SSH_ENV $HOME/.ssh/environment
+
+function start_agent
+  echo "Initializing new SSH agent ..."
+  ssh-agent -c | sed 's/^echo/#echo/' > $SSH_ENV
+  echo "succeeded"
+  chmod 600 $SSH_ENV
+  . $SSH_ENV > /dev/null
+  ssh-add
+end
+
+function test_identities
+  ssh-add -l | grep "The agent has no identities" > /dev/null
+  if [ $status -eq 0 ]
+    ssh-add ~/.ssh/id_rsa-github
+    if [ $status -eq 2 ]
+      start_agent
+    end
+  end
+end
+
+if [ -n "$SSH_AGENT_PID" ]
+  ps -ef | grep $SSH_AGENT_PID | grep ssh-agent > /dev/null
+  if [ $status -eq 0 ]
+    test_identities
+  end
+else
+  if [ -f $SSH_ENV ]
+    . $SSH_ENV > /dev/null
+  end
+  ps -ef | grep $SSH_AGENT_PID | grep -v grep | grep ssh-agent > /dev/null
+  if [ $status -eq 0 ]
+    test_identities
+  else
+    start_agent
+  end
+end
+
+# Add abbreviations
+abbr -ag js 'json-server --watch'
+abbr -ag ngl 'npm list -g --depth 0'
+abbr -ag sa 'ps aux | grep ssh-agent'
+abbr -ag sag 'ssh-add ~/.ssh/id_rsa-github'
+abbr -ag sal 'ssh-add -L'
+abbr -ag vui 'vue ui'
+abbr -ag yad 'yarn add --dev'
+abbr -ag yadw 'yarn add --dev --ignore-workspace-root-check'
+abbr -ag ygl 'yarn global list --depth=0'
+abbr -ag myip 'ip addr | grep eth0'
+
+# Brew
+# eval (/home/linuxbrew/.linuxbrew/bin/brew shellenv)
+
+# Set the DISPLAY environment variable
+# set -gx DISPLAY (cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}'):0.0
+
+# Set Display Scaling
+# set -gx GDK_SCALE 2
+
+# Add Yarn to path
+# set PATH (yarn global bin) $PATH
