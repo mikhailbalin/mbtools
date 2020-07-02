@@ -11,16 +11,6 @@ export default async function promptForMissingOptions(options: TOptions) {
 
   const { update, git, ssh, password } = options;
   const questions = [];
-  const isPasswordRequired = !(update || ssh) && !password;
-
-  if (isPasswordRequired) {
-    questions.push({
-      type: 'password',
-      name: 'password',
-      message: 'WSL password?',
-      validate: passwordValidator,
-    });
-  }
 
   if (!update) {
     questions.push({
@@ -51,9 +41,24 @@ export default async function promptForMissingOptions(options: TOptions) {
 
   const answers = await inquirer.prompt(questions);
 
+  const passwordQuestion = [];
+  const isPasswordRequired =
+    (update || answers.update || ssh || answers.ssh) && !password;
+
+  if (isPasswordRequired) {
+    passwordQuestion.push({
+      type: 'password',
+      name: 'password',
+      message: 'WSL password?',
+      validate: passwordValidator,
+    });
+  }
+
+  const passwordAnswer = await inquirer.prompt(passwordQuestion);
+
   return {
     ...options,
-    password: password || (answers.password as string),
+    password: password || (passwordAnswer.password as string),
     update: update || (answers.update as boolean),
     git: git || (answers.git as boolean),
     ssh: ssh || (answers.ssh as boolean),
