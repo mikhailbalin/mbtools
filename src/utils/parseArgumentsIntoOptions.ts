@@ -7,11 +7,14 @@ function parseArgumentsIntoOptions(rawArgs: string[]) {
       '--update': Boolean,
       '--git': Boolean,
       '--ssh': Boolean,
+      '--fish': Boolean,
+      '--brew': Boolean,
       '--yes': Boolean,
       '-p': '--password',
       '-u': '--update',
       '-g': '--git',
-      '-i': '--install',
+      '-f': '--fish',
+      '-b': '--brew',
       '-y': '--yes',
     },
     {
@@ -24,6 +27,8 @@ function parseArgumentsIntoOptions(rawArgs: string[]) {
     update: args['--update'] || false,
     git: args['--git'] || false,
     ssh: args['--ssh'] || false,
+    fish: args['--fish'] || false,
+    brew: args['--brew'] || false,
     skipPrompts: args['--yes'] || false,
   };
 }

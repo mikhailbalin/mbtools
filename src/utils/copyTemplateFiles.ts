@@ -1,12 +1,10 @@
-import ncp from 'ncp';
-import { promisify } from 'util';
+import { copyAsync } from 'fs-jetpack';
 import { TOptions } from './parseArgumentsIntoOptions';
 
-const copy = promisify(ncp);
-
-export default async function copyTemplateFiles(options: TOptions) {
-  console.log(options);
-  return copy('', '', {
-    clobber: false,
-  });
+export default async function copyTemplateFiles(
+  options: TOptions,
+  from: string,
+  to: string,
+) {
+  copyAsync(from, to, { overwrite: true });
 }

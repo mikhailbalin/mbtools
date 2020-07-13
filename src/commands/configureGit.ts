@@ -11,5 +11,5 @@ export async function configureGit() {
     await execa('git', ['config', '--global', k, v]);
   }
 
-  return Promise.resolve('Cool');
+  return Promise.resolve('Git ready');
 }
