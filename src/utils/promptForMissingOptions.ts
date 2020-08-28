@@ -6,7 +6,9 @@ const passwordValidator = async (input: string) => {
   return true;
 };
 
-export default async function promptForMissingOptions(options: TOptions) {
+export default async function promptForMissingOptions(
+  options: TOptions,
+): Promise<Omit<TOptions, 'skipPrompts'>> {
   if (options.skipPrompts) return options;
 
   const { update, git, ssh, fish, brew, password } = options;

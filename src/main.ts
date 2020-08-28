@@ -8,7 +8,7 @@ import {
 } from './commands';
 import { TOptions } from './utils/parseArgumentsIntoOptions';
 
-export async function createProject(options: TOptions) {
+export async function createProject(options: Omit<TOptions, 'skipPrompts'>) {
   const tasks = new Listr([
     {
       title: 'System update',
