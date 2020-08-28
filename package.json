@@ -13,7 +13,7 @@
   "scripts": {
     "format": "prettier --write **/*.{js,ts,tsx,json,md}",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
-    "clean": "rimraf ./lib mbtools",
+    "clean": "rimraf ./lib",
     "compile:ts": "tsc --project .",
     "compile:exec": "pkg ./lib/index.js --targets linux --output lib/exec/mbtools",
     "build": "npm run clean && npm run compile:ts && npm run compile:exec",
