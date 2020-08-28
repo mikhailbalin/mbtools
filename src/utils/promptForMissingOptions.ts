@@ -1,6 +1,9 @@
 import inquirer from 'inquirer';
 import { TOptions } from './parseArgumentsIntoOptions';
 
+const includesAny = <T>(arr: T[], values: T[]) =>
+  values.some((v) => arr.includes(v));
+
 const passwordValidator = async (input: string) => {
   if (input === '') return 'Password should not be empty.';
   return true;
@@ -12,66 +15,29 @@ export default async function promptForMissingOptions(
   if (options.skipPrompts) return options;
 
   const { update, git, ssh, fish, brew, password } = options;
-  const questions = [];
 
-  if (!update) {
-    questions.push({
-      type: 'confirm',
-      name: 'update',
-      message: 'Update system?',
-      default: true,
-    });
-  }
-
-  if (!git) {
-    questions.push({
-      type: 'confirm',
-      name: 'git',
-      message: 'Configure git?',
-      default: true,
-    });
-  }
-
-  if (!ssh) {
-    questions.push({
-      type: 'confirm',
-      name: 'ssh',
-      message: 'Configure ssh?',
-      default: true,
-    });
-  }
-
-  if (!fish) {
-    questions.push({
-      type: 'confirm',
-      name: 'fish',
-      message: 'Install fish?',
-      default: true,
-    });
-  }
-
-  if (!brew) {
-    questions.push({
-      type: 'confirm',
-      name: 'brew',
-      message: 'Install Brew?',
-      default: true,
-    });
-  }
+  const questions = [
+    {
+      type: 'checkbox',
+      name: 'actions',
+      message: 'What would you like to do?',
+      choices: [
+        { name: 'Update system', value: 'update', checked: update },
+        { name: 'Configure git', value: 'git', checked: git },
+        { name: 'Configure ssh', value: 'ssh', checked: ssh },
+        { name: 'Install fish', value: 'fish', checked: fish },
+        { name: 'Install Brew', value: 'brew', checked: brew },
+      ],
+    },
+  ];
 
   const answers = await inquirer.prompt(questions);
 
   const isPasswordRequired =
-    [
-      update,
-      answers.update,
-      ssh,
-      answers.ssh,
-      fish,
-      answers.fish,
-      brew,
-      answers.brew,
-    ].some(Boolean) && !password;
+    includesAny(
+      ['update', 'ssh', 'fish', 'brew'],
+      answers.actions as string[],
+    ) && !password;
 
   const passwordAnswer = isPasswordRequired
     ? await inquirer.prompt({
@@ -80,14 +46,14 @@ export default async function promptForMissingOptions(
         message: 'WSL password?',
         validate: passwordValidator,
       })
-    : '';
+    : password;
 
   return {
-    password: password || (passwordAnswer as string),
-    update: update || (answers.update as boolean),
-    git: git || (answers.git as boolean),
-    ssh: ssh || (answers.ssh as boolean),
-    fish: fish || (answers.fish as boolean),
-    brew: brew || (answers.brew as boolean),
+    password: passwordAnswer as string,
+    update: (answers.update as boolean) || update,
+    git: (answers.git as boolean) || git,
+    ssh: (answers.ssh as boolean) || ssh,
+    fish: (answers.fish as boolean) || fish,
+    brew: (answers.brew as boolean) || brew,
   };
 }
