@@ -1,6 +1,11 @@
 import chalk from 'chalk';
 import Listr from 'listr';
-import { updateSystem, configureGit, installFish } from './commands';
+import {
+  updateSystem,
+  configureGit,
+  installFish,
+  configureSSH,
+} from './commands';
 import { TOptions } from './utils/parseArgumentsIntoOptions';
 
 export async function createProject(options: TOptions) {
@@ -20,6 +25,11 @@ export async function createProject(options: TOptions) {
       task: (ctx, task: Listr.ListrTaskWrapper<any>) =>
         installFish(task, options),
       enabled: () => options.fish,
+    },
+    {
+      title: 'Configure SSH',
+      task: () => configureSSH(),
+      enabled: () => options.ssh,
     },
   ]);
 
