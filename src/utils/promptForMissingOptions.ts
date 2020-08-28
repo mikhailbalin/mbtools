@@ -59,7 +59,6 @@ export default async function promptForMissingOptions(options: TOptions) {
 
   const answers = await inquirer.prompt(questions);
 
-  const passwordQuestion = [];
   const isPasswordRequired =
     [
       update,
@@ -72,24 +71,21 @@ export default async function promptForMissingOptions(options: TOptions) {
       answers.brew,
     ].some(Boolean) && !password;
 
-  if (isPasswordRequired) {
-    passwordQuestion.push({
-      type: 'password',
-      name: 'password',
-      message: 'WSL password?',
-      validate: passwordValidator,
-    });
-  }
-
-  const passwordAnswer = await inquirer.prompt(passwordQuestion);
+  const passwordAnswer = isPasswordRequired
+    ? await inquirer.prompt({
+        type: 'password',
+        name: 'password',
+        message: 'WSL password?',
+        validate: passwordValidator,
+      })
+    : '';
 
   return {
-    ...options,
-    password: password || (passwordAnswer.password as string),
+    password: password || (passwordAnswer as string),
     update: update || (answers.update as boolean),
     git: git || (answers.git as boolean),
     ssh: ssh || (answers.ssh as boolean),
-    brew: brew || (answers.brew as boolean),
     fish: fish || (answers.fish as boolean),
+    brew: brew || (answers.brew as boolean),
   };
 }
