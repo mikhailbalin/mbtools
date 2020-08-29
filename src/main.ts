@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import Listr from 'listr';
 import {
   updateSystem,
@@ -7,8 +6,16 @@ import {
   configureSSH,
 } from './commands';
 import { TOptions } from './utils/parseArgumentsIntoOptions';
+import { EVERYTHING_READY, NOTHING_HAPPENED } from './constants';
+
+const none = <T>(arr: T[], fn = Boolean) => !arr.some(fn);
 
 export async function createProject(options: Omit<TOptions, 'skipPrompts'>) {
+  if (none(Object.values(options))) {
+    console.info(NOTHING_HAPPENED);
+    return;
+  }
+
   const tasks = new Listr([
     {
       title: 'System update',
@@ -35,6 +42,6 @@ export async function createProject(options: Omit<TOptions, 'skipPrompts'>) {
 
   await tasks.run();
 
-  console.info('%s Everything ready', chalk.green.bold('DONE'));
+  console.info(EVERYTHING_READY);
   return true;
 }
