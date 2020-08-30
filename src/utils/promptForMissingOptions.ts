@@ -12,48 +12,55 @@ const passwordValidator = async (input: string) => {
 export default async function promptForMissingOptions(
   options: TOptions,
 ): Promise<Omit<TOptions, 'skipPrompts'>> {
-  if (options.skipPrompts) return options;
+  const { update, git, ssh, fish, brew, password, skipPrompts } = options;
 
-  const { update, git, ssh, fish, brew, password } = options;
+  let answers: string[] | null = null;
 
-  const questions = [
-    {
-      type: 'checkbox',
-      name: 'actions',
-      message: 'What would you like to do?',
-      choices: [
-        { name: 'Update system', value: 'update', checked: update },
-        { name: 'Configure git', value: 'git', checked: git },
-        { name: 'Configure ssh', value: 'ssh', checked: ssh },
-        { name: 'Install fish', value: 'fish', checked: fish },
-        { name: 'Install Brew', value: 'brew', checked: brew },
-      ],
-    },
-  ];
+  if (!skipPrompts) {
+    const questions = [
+      {
+        type: 'checkbox',
+        name: 'actions',
+        message: 'What would you like to do?',
+        choices: [
+          { name: 'Update system', value: 'update', checked: update },
+          { name: 'Configure git', value: 'git', checked: git },
+          { name: 'Configure ssh', value: 'ssh', checked: ssh },
+          { name: 'Install fish', value: 'fish', checked: fish },
+          { name: 'Install Brew', value: 'brew', checked: brew },
+        ],
+      },
+    ] as const;
 
-  const answers = await inquirer.prompt(questions);
+    const resault = await inquirer.prompt(questions);
+    answers = resault.actions;
+  }
 
   const isPasswordRequired =
-    includesAny(
-      ['update', 'ssh', 'fish', 'brew'],
-      answers.actions as string[],
-    ) && !password;
+    skipPrompts ||
+    (answers && includesAny(['update', 'ssh', 'fish', 'brew'], answers));
 
-  const passwordAnswer = isPasswordRequired
+  const passwordAnswer = password
+    ? password
+    : isPasswordRequired
     ? await inquirer.prompt({
         type: 'password',
         name: 'password',
         message: 'WSL password?',
         validate: passwordValidator,
       })
-    : password;
+    : '';
+
+  const getOptionValue = (
+    value: keyof Omit<TOptions, 'skipPrompts' | 'password'>,
+  ) => (answers && answers.includes(value)) || options[value];
 
   return {
     password: passwordAnswer as string,
-    update: (answers.update as boolean) || update,
-    git: (answers.git as boolean) || git,
-    ssh: (answers.ssh as boolean) || ssh,
-    fish: (answers.fish as boolean) || fish,
-    brew: (answers.brew as boolean) || brew,
+    update: getOptionValue('update'),
+    git: getOptionValue('git'),
+    ssh: getOptionValue('ssh'),
+    fish: getOptionValue('fish'),
+    brew: getOptionValue('brew'),
   };
 }
