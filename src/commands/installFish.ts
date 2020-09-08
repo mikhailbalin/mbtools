@@ -20,7 +20,7 @@ export async function installFish(
     ];
 
     for (const command of commands) {
-      await execAsRoot(command, options.password);
+      await execAsRoot(command, options.password!);
     }
   })();
 

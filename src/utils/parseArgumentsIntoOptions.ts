@@ -23,7 +23,7 @@ function parseArgumentsIntoOptions(rawArgs: string[]) {
   );
 
   return {
-    password: args['--password'] || '',
+    password: args['--password'] || null,
     update: args['--update'] || false,
     git: args['--git'] || false,
     ssh: args['--ssh'] || false,

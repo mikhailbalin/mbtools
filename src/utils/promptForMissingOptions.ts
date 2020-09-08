@@ -36,27 +36,27 @@ export default async function promptForMissingOptions(
     answers = resault.actions;
   }
 
-  const isPasswordRequired =
+  const shouldAskPassword =
     skipPrompts ||
     (answers && includesAny(['update', 'ssh', 'fish', 'brew'], answers));
 
-  const passwordAnswer = password
+  const passwordAnswer: string | null = password
     ? password
-    : isPasswordRequired
+    : shouldAskPassword
     ? await inquirer.prompt({
         type: 'password',
         name: 'password',
         message: 'WSL password?',
         validate: passwordValidator,
       })
-    : '';
+    : null;
 
   const getOptionValue = (
     value: keyof Omit<TOptions, 'skipPrompts' | 'password'>,
   ) => (answers && answers.includes(value)) || options[value];
 
   return {
-    password: passwordAnswer as string,
+    password: passwordAnswer,
     update: getOptionValue('update'),
     git: getOptionValue('git'),
     ssh: getOptionValue('ssh'),
