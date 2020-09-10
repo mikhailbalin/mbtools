@@ -10,19 +10,17 @@ export async function installFish(
   task: Listr.ListrTaskWrapper<any>,
   options: Omit<TOptions, 'skipPrompts'>,
 ) {
-  (async function () {
-    task.output = 'Installing...';
+  task.output = 'Installing...';
 
-    const commands = [
-      'apt-add-repository ppa:fish-shell/release-3',
-      'apt-get update',
-      'apt-get install fish -y',
-    ];
+  const commands = [
+    'apt-add-repository ppa:fish-shell/release-3',
+    'apt-get update',
+    'apt-get install fish -y',
+  ];
 
-    for (const command of commands) {
-      await execAsRoot(command, options.password!);
-    }
-  })();
+  for (const command of commands) {
+    await execAsRoot(command, options.password!);
+  }
 
   task.output = 'Setting config...';
 

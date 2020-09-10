@@ -11,7 +11,9 @@ import { EVERYTHING_READY, NOTHING_HAPPENED } from './constants';
 const none = <T>(arr: T[], fn = Boolean) => !arr.some(fn);
 
 export async function createProject(options: Omit<TOptions, 'skipPrompts'>) {
-  if (none(Object.values(options))) {
+  const { password, ...rest } = options;
+
+  if (none(Object.values(rest))) {
     console.info(NOTHING_HAPPENED);
     return;
   }
@@ -19,7 +21,7 @@ export async function createProject(options: Omit<TOptions, 'skipPrompts'>) {
   const tasks = new Listr([
     {
       title: 'System update',
-      task: () => updateSystem(options),
+      task: () => updateSystem(password),
       enabled: () => options.update,
     },
     {

@@ -1,17 +1,24 @@
 import execa from 'execa';
 
 const execAsRoot = async (command: string, password: string) => {
-  const result = await execa.command(`sudo -S ${command}`);
+  try {
+    const result = await execa.command(`sudo -S ${command}`, {
+      // input: `${password}\n`,
+      // stdio: 'inherit',
+    });
 
-  console.log(result.stdout);
+    console.log({ stdout: result.stdout });
 
-  // result.stdin?.write(`${password}\n`);
+    // (await result).stdin.write(`${password}\n`);
 
-  // if ((await result).failed) {
-  //   return Promise.reject(new Error('Fail'));
-  // }
+    if (result.failed) {
+      return Promise.reject(new Error('Fail'));
+    }
 
-  // return Promise.resolve('Cool');
+    return Promise.resolve('Cool');
+  } catch (error) {
+    console.error({ execAsRoot: error });
+  }
 };
 
 export default execAsRoot;

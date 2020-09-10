@@ -1,7 +1,6 @@
-import { TOptions } from '../utils/parseArgumentsIntoOptions';
 import execAsRoot from '../utils/execAsRoot';
 
-export async function updateSystem(options: Omit<TOptions, 'skipPrompts'>) {
-  const responce = await execAsRoot('apt-get update', options.password!);
+export async function updateSystem(password: string | null) {
+  const responce = await execAsRoot('apt-get update', password!);
   return responce;
 }
