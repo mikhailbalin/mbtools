@@ -10,6 +10,4 @@ export async function configureGit() {
   for (const [k, v] of settings.entries()) {
     await execa('git', ['config', '--global', k, v]);
   }
-
-  return Promise.resolve('Git ready');
 }
