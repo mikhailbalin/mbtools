@@ -7,7 +7,7 @@ import os from 'os';
 import execAsRoot from '../utils/execAsRoot';
 
 export async function installFish(
-  task: Listr.ListrTaskWrapper<any>,
+  task: Listr.ListrTaskWrapper,
   options: Omit<TOptions, 'skipPrompts'>,
 ) {
   task.output = 'Installing...';

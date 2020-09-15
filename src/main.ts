@@ -35,8 +35,7 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
     },
     {
       title: 'Configure fish',
-      task: (ctx, task: Listr.ListrTaskWrapper<any>) =>
-        installFish(task, options),
+      task: (ctx, task: Listr.ListrTaskWrapper) => installFish(task, options),
       enabled: () => options.fish,
     },
     {
