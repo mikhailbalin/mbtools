@@ -1,24 +1,26 @@
-import execa from 'execa';
+import { spawn } from 'child_process';
 
-const execAsRoot = async (command: string, password: string) => {
-  try {
-    const result = await execa.command(`sudo -S ${command}`, {
-      // input: `${password}\n`,
-      // stdio: 'inherit',
+const execAsRoot = (command: string, password: string) => {
+  return new Promise<string>((resolve, reject) => {
+    const child = spawn(`sudo -S ${command}`, {
+      shell: true,
     });
 
-    console.log({ stdout: result.stdout });
+    child.stdin.write(`${password}\n`);
 
-    // (await result).stdin.write(`${password}\n`);
+    child.stderr.on('data', (data) => {
+      if (data.includes('password for')) return;
+      reject(new Error(`execAsRoot stderr: ${data}`));
+    });
 
-    if (result.failed) {
-      return Promise.reject(new Error('Fail'));
-    }
+    child.on('error', (error) => {
+      reject(new Error(`execAsRoot error: ${error.message}`));
+    });
 
-    return Promise.resolve('Cool');
-  } catch (error) {
-    console.error({ execAsRoot: error });
-  }
+    child.on('close', (code) => {
+      resolve(`execAsRoot resolved with code ${code}`);
+    });
+  });
 };
 
 export default execAsRoot;

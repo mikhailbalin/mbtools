@@ -6,7 +6,11 @@ import {
   configureSSH,
 } from './commands';
 import { TOptions } from './utils/parseArgumentsIntoOptions';
-import { EVERYTHING_READY, NOTHING_HAPPENED } from './constants';
+import {
+  NOTHING_HAPPENED,
+  EVERYTHING_READY,
+  SOMETHING_BROKE,
+} from './constants';
 
 const none = <T>(arr: T[], fn = Boolean) => !arr.some(fn);
 
@@ -42,8 +46,10 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
     },
   ]);
 
-  await tasks.run();
-
-  console.info(EVERYTHING_READY);
-  return true;
+  try {
+    await tasks.run();
+    console.info(`\n${EVERYTHING_READY}`);
+  } catch (error) {
+    console.error(`\n${SOMETHING_BROKE}`);
+  }
 }
