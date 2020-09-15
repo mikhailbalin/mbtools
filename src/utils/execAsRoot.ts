@@ -2,22 +2,22 @@ import { spawn } from 'child_process';
 
 const execAsRoot = (command: string, password: string) => {
   return new Promise<string>((resolve, reject) => {
-    const child = spawn(`sudo -S ${command}`, {
+    const superuserCommand = spawn(`sudo -S ${command}`, {
       shell: true,
     });
 
-    child.stdin.write(`${password}\n`);
+    superuserCommand.stdin.write(`${password}\n`);
 
-    child.stderr.on('data', (data) => {
+    superuserCommand.stderr.on('data', (data) => {
       if (data.includes('password for')) return;
       reject(new Error(`execAsRoot stderr: ${data}`));
     });
 
-    child.on('error', (error) => {
+    superuserCommand.on('error', (error) => {
       reject(new Error(`execAsRoot error: ${error.message}`));
     });
 
-    child.on('close', (code) => {
+    superuserCommand.on('close', (code) => {
       resolve(`execAsRoot resolved with code ${code}`);
     });
   });
