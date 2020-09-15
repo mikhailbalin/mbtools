@@ -10,7 +10,7 @@ import { EVERYTHING_READY, NOTHING_HAPPENED } from './constants';
 
 const none = <T>(arr: T[], fn = Boolean) => !arr.some(fn);
 
-export async function createProject(options: Omit<TOptions, 'skipPrompts'>) {
+export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
   const { password, ...rest } = options;
 
   if (none(Object.values(rest))) {
