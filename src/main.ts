@@ -1,7 +1,7 @@
-// import Listr from 'listr';
+import Listr from 'listr';
 import {
   updateSystem,
-  // configureGit,
+  configureGit,
   // installFish,
   // configureSSH,
 } from './commands';
@@ -22,33 +22,33 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
     return;
   }
 
-  // const tasks = new Listr([
-  //   {
-  //     title: 'System update',
-  //     task: () => updateSystem(password),
-  //     enabled: () => options.update,
-  //   },
-  //   {
-  //     title: 'Initialize git',
-  //     task: () => configureGit(),
-  //     enabled: () => options.git,
-  //   },
-  //   {
-  //     title: 'Configure fish',
-  //     task: (ctx, task: Listr.ListrTaskWrapper) => installFish(task, options),
-  //     enabled: () => options.fish,
-  //   },
-  //   {
-  //     title: 'Configure SSH',
-  //     task: () => configureSSH(),
-  //     enabled: () => options.ssh,
-  //   },
-  // ]);
+  const tasks = new Listr([
+    {
+      title: 'System update',
+      task: () => updateSystem(password!),
+      enabled: () => options.update,
+    },
+    {
+      title: 'Initialize git',
+      task: () => configureGit(),
+      enabled: () => options.git,
+    },
+    // {
+    //   title: 'Configure fish',
+    //   task: (ctx, task: Listr.ListrTaskWrapper) => installFish(task, options),
+    //   enabled: () => options.fish,
+    // },
+    // {
+    //   title: 'Configure SSH',
+    //   task: () => configureSSH(),
+    //   enabled: () => options.ssh,
+    // },
+  ]);
 
   try {
-    await updateSystem(password);
+    await tasks.run();
     console.info(`\n${EVERYTHING_READY}`);
   } catch (error) {
-    console.error(`\n${SOMETHING_BROKE}. ${error}`);
+    console.error(`\n${SOMETHING_BROKE}.\n${error}`);
   }
 }
