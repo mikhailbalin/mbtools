@@ -12,9 +12,18 @@ const passwordValidator = async (input: string) => {
 export default async function promptForMissingOptions(
   options: TOptions,
 ): Promise<Omit<TOptions, 'skipPrompts'>> {
-  const { update, git, ssh, fish, brew, password, skipPrompts } = options;
+  const {
+    update,
+    git,
+    ssh,
+    fish,
+    brew,
+    password: optionsPassword,
+    skipPrompts,
+  } = options;
 
   let answers: string[] | null = null;
+  let password: string | null = optionsPassword;
 
   if (!skipPrompts) {
     const questions = [
@@ -40,23 +49,23 @@ export default async function promptForMissingOptions(
     skipPrompts ||
     (answers && includesAny(['update', 'ssh', 'fish', 'brew'], answers));
 
-  const passwordAnswer: string | null = password
-    ? password
-    : shouldAskPassword
-    ? await inquirer.prompt({
-        type: 'password',
-        name: 'password',
-        message: 'WSL password?',
-        validate: passwordValidator,
-      })
-    : null;
+  if (!password && shouldAskPassword) {
+    const resault = await inquirer.prompt({
+      type: 'password',
+      name: 'password',
+      message: 'WSL password?',
+      validate: passwordValidator,
+    });
+
+    password = resault.password;
+  }
 
   const getOptionValue = (
     value: keyof Omit<TOptions, 'skipPrompts' | 'password'>,
   ) => (answers && answers.includes(value)) || options[value];
 
   return {
-    password: passwordAnswer,
+    password,
     update: getOptionValue('update'),
     git: getOptionValue('git'),
     ssh: getOptionValue('ssh'),

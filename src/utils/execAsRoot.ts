@@ -6,18 +6,15 @@ const execAsRoot = (command: string, password: string) => {
       shell: true,
     });
 
-    superuserCommand.stdout.on('data', (data) => {
-      console.log(`child stdout:\n${data}`);
-    });
+    // superuserCommand.stdout.on('data', (data) => {
+    //   console.log(`child stdout:\n${data}`);
+    // });
 
     superuserCommand.stderr.on('data', (data: Buffer) => {
       const chunk = data.toString('utf8');
-      console.log(`child stderr:\n${chunk}`);
+      // console.log(`child stderr:\n${chunk}`);
 
-      if (
-        chunk.includes('password for') ||
-        chunk.includes('Sorry, try again')
-      ) {
+      if (chunk.includes('password for')) {
         superuserCommand.stdin.write(`${password}\n`, (error) => {
           if (error) {
             reject(new Error(`execAsRoot write error: ${error.message}`));
@@ -25,7 +22,10 @@ const execAsRoot = (command: string, password: string) => {
         });
       }
 
-      if (chunk.includes('incorrect password attempts')) {
+      if (
+        chunk.includes('Sorry, try again') ||
+        chunk.includes('incorrect password attempts')
+      ) {
         reject(new Error(`execAsRoot stderr: ${chunk}`));
       }
     });
