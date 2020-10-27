@@ -1,29 +1,21 @@
 import arg from 'arg';
-import {
-  ARG_BREW,
-  ARG_FISH,
-  ARG_GIT,
-  ARG_PASSWORD,
-  ARG_SSH,
-  ARG_UPDATE,
-} from '../constants';
 
 function parseArgumentsIntoOptions(rawArgs: string[]) {
   const args = arg(
     {
-      [`--${ARG_PASSWORD}`]: String,
-      [`--${ARG_UPDATE}`]: Boolean,
-      [`--${ARG_GIT}`]: Boolean,
-      [`--${ARG_SSH}`]: Boolean,
-      [`--${ARG_FISH}`]: Boolean,
-      [`--${ARG_BREW}`]: Boolean,
+      '--password': String,
+      '--update': Boolean,
+      '--git': Boolean,
+      '--ssh': Boolean,
+      '--fish': Boolean,
+      '--brew': Boolean,
       '--yes': Boolean,
-      '-p': `--${ARG_PASSWORD}`,
-      '-u': `--${ARG_UPDATE}`,
-      '-g': `--${ARG_GIT}`,
-      '-f': `--${ARG_SSH}`,
-      '-b': `--${ARG_FISH}`,
-      '-y': `--${ARG_BREW}`,
+      '-p': '--password',
+      '-u': '--update',
+      '-g': '--git',
+      '-f': '--fish',
+      '-b': '--brew',
+      '-y': '--yes',
     },
     {
       argv: rawArgs.slice(2),
@@ -31,12 +23,12 @@ function parseArgumentsIntoOptions(rawArgs: string[]) {
   );
 
   return {
-    password: args[`--${ARG_PASSWORD}`] || null,
-    update: args[`--${ARG_UPDATE}`] || false,
-    git: args[`--${ARG_GIT}`] || false,
-    ssh: args[`--${ARG_SSH}`] || false,
-    fish: args[`--${ARG_FISH}`] || false,
-    brew: args[`--${ARG_BREW}`] || false,
+    password: args['--password'] || null,
+    update: args['--update'] || false,
+    git: args['--git'] || false,
+    ssh: args['--ssh'] || false,
+    fish: args['--fish'] || false,
+    brew: args['--brew'] || false,
     skipPrompts: args['--yes'] || false,
   };
 }
