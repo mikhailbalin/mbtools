@@ -1,3 +1,4 @@
+<% if (ssh) { -%>
 # Start ssh agent
 setenv SSH_ENV $HOME/.ssh/environment
 
@@ -38,6 +39,7 @@ else
   end
 end
 
+<% } -%>
 # Add abbreviations
 abbr -ag js 'json-server --watch'
 abbr -ag ngl 'npm list -g --depth 0'

@@ -4,7 +4,25 @@ import path from 'path';
 import Listr from 'listr';
 import { readAsync, writeAsync } from 'fs-jetpack';
 import os from 'os';
-import execAsRoot from '../utils/execAsRoot';
+// import execAsRoot from '../utils/execAsRoot';
+
+const writeConfig = async (
+  fileName: string,
+  options: Omit<TOptions, 'skipPrompts'>,
+) => {
+  const templates = path.join(__dirname, '..', 'templates');
+  const fishConfigTemplatePath = path.join(templates, `${fileName}.fish.ejs`);
+
+  const fishConfigTemplate = await readAsync(fishConfigTemplatePath);
+  const fishConfigContent = await renderTemplate(fishConfigTemplate, options);
+
+  if (fishConfigContent) {
+    await writeAsync(
+      `${os.homedir()}/.config/fish/${fileName}.fish`,
+      fishConfigContent,
+    );
+  }
+};
 
 export async function installFish(
   task: Listr.ListrTaskWrapper,
@@ -24,20 +42,8 @@ export async function installFish(
 
   task.output = 'Setting config...';
 
-  const templates = path.join(__dirname, '..', 'templates');
-
-  const fishConfigTemplatePath = path.join(templates, 'config.fish.ejs');
-  // let fishPromptTemplate = path.join(templates, 'fish_prompt.fish.ejs');
-
-  const fishConfigTemplate = await readAsync(fishConfigTemplatePath);
-  const fishConfigContent = await renderTemplate(fishConfigTemplate, options);
-
-  if (fishConfigContent) {
-    await writeAsync(
-      `${os.homedir()}/.config/fish/config.fish`,
-      fishConfigContent,
-    );
-  }
+  await writeConfig('config', options);
+  await writeConfig('fish_prompt', options);
 
   return Promise.resolve('Fish installed');
 }
