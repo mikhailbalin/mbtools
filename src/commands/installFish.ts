@@ -12,33 +12,30 @@ export async function installFish(
 ) {
   task.output = 'Installing...';
 
-  const commands = [
-    'apt-add-repository ppa:fish-shell/release-3',
-    'apt-get update',
-    'apt-get install fish -y',
-  ];
+  // const commands = [
+  //   'apt-add-repository ppa:fish-shell/release-3',
+  //   'apt-get update',
+  //   'apt-get install fish -y',
+  // ];
 
-  for (const command of commands) {
-    await execAsRoot(command, options.password!);
-  }
+  // for (const command of commands) {
+  //   await execAsRoot(command, options.password!);
+  // }
 
   task.output = 'Setting config...';
 
   const templates = path.join(__dirname, '..', 'templates');
 
-  const fishConfigTemplate = path.join(templates, 'config.fish.ejs');
+  const fishConfigTemplatePath = path.join(templates, 'config.fish.ejs');
   // let fishPromptTemplate = path.join(templates, 'fish_prompt.fish.ejs');
 
-  let fishConfigTemplateContents = await readAsync(fishConfigTemplate);
-  fishConfigTemplateContents = await renderTemplate(
-    fishConfigTemplateContents,
-    options,
-  );
+  const fishConfigTemplate = await readAsync(fishConfigTemplatePath);
+  const fishConfigContent = await renderTemplate(fishConfigTemplate, options);
 
-  if (fishConfigTemplateContents) {
+  if (fishConfigContent) {
     await writeAsync(
       `${os.homedir()}/.config/fish/config.fish`,
-      fishConfigTemplateContents,
+      fishConfigContent,
     );
   }
 
