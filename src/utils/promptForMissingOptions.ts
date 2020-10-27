@@ -1,4 +1,5 @@
 import inquirer from 'inquirer';
+import { ARG_BREW, ARG_FISH, ARG_GIT, ARG_SSH, ARG_UPDATE } from '../constants';
 import { TOptions } from './parseArgumentsIntoOptions';
 
 const includesAny = <T>(arr: T[], values: T[]) =>
@@ -32,11 +33,11 @@ export default async function promptForMissingOptions(
         name: 'actions',
         message: 'What would you like to do?',
         choices: [
-          { name: 'Update system', value: 'update', checked: update },
-          { name: 'Configure git', value: 'git', checked: git },
-          { name: 'Configure ssh', value: 'ssh', checked: ssh },
-          { name: 'Install fish', value: 'fish', checked: fish },
-          { name: 'Install Brew', value: 'brew', checked: brew },
+          { name: 'Update system', value: ARG_UPDATE, checked: update },
+          { name: 'Configure git', value: ARG_GIT, checked: git },
+          { name: 'Configure ssh', value: ARG_SSH, checked: ssh },
+          { name: 'Install fish', value: ARG_FISH, checked: fish },
+          { name: 'Install Brew', value: ARG_BREW, checked: brew },
         ],
       },
     ] as const;
@@ -47,7 +48,8 @@ export default async function promptForMissingOptions(
 
   const shouldAskPassword =
     skipPrompts ||
-    (answers && includesAny(['update', 'ssh', 'fish', 'brew'], answers));
+    (answers &&
+      includesAny([ARG_UPDATE, ARG_SSH, ARG_FISH, ARG_BREW], answers));
 
   if (!password && shouldAskPassword) {
     const resault = await inquirer.prompt({
@@ -66,10 +68,10 @@ export default async function promptForMissingOptions(
 
   return {
     password,
-    update: getOptionValue('update'),
-    git: getOptionValue('git'),
-    ssh: getOptionValue('ssh'),
-    fish: getOptionValue('fish'),
-    brew: getOptionValue('brew'),
+    update: getOptionValue(ARG_UPDATE),
+    git: getOptionValue(ARG_GIT),
+    ssh: getOptionValue(ARG_SSH),
+    fish: getOptionValue(ARG_FISH),
+    brew: getOptionValue(ARG_BREW),
   };
 }
