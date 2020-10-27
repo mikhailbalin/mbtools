@@ -11,15 +11,21 @@ const writeConfig = async (
   options: Omit<TOptions, 'skipPrompts'>,
 ) => {
   const templates = path.join(__dirname, '..', 'templates');
-  const fishConfigTemplatePath = path.join(templates, `${fileName}.fish.ejs`);
+  const templatePath = path.join(templates, `${fileName}.fish.ejs`);
 
-  const fishConfigTemplate = await readAsync(fishConfigTemplatePath);
-  const fishConfigContent = await renderTemplate(fishConfigTemplate, options);
+  const configTemplate = await readAsync(templatePath);
+  const configContent = await renderTemplate(configTemplate, {
+    ...options,
+    display: false,
+    yarn: true,
+  });
 
-  if (fishConfigContent) {
+  if (configContent) {
     await writeAsync(
-      `${os.homedir()}/.config/fish/${fileName}.fish`,
-      fishConfigContent,
+      `${os.homedir()}/.config/fish/${
+        fileName !== 'config' ? 'functions/' : ''
+      }${fileName}.fish`,
+      configContent,
     );
   }
 };
