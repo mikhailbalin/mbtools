@@ -14,9 +14,10 @@
     "format": "prettier --write **/*.{js,ts,tsx,json,md}",
     "lint": "eslint '*/**/*.{js,ts,tsx}'",
     "clean": "rimraf ./lib",
+    "copy": "cp -r src/templates lib/templates",
     "compile:ts": "tsc --project .",
-    "compile:exec": "pkg ./lib/index.js --targets linux --output lib/exec/mbtools",
-    "build": "yarn run clean && yarn run compile:ts && yarn run compile:exec",
+    "compile:exec": "pkg ./lib/index.js --config package.json --targets linux --output lib/exec/mbtools",
+    "build": "yarn run clean && yarn run compile:ts && yarn copy && yarn run compile:exec",
     "test": "jest --watch",
     "coverage": "jest --coverage"
   },
@@ -64,7 +65,6 @@
   "files": [
     "bin/",
     "lib/",
-    "templates/",
     "tsconfig.json"
   ],
   "jest": {
@@ -82,8 +82,7 @@
     ]
   },
   "pkg": {
-    "assets": [
-      "src/templates/**/*"
-    ]
+    "scripts": "lib/**/*.js",
+    "assets": "lib/templates/**/*"
   }
 }
