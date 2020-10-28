@@ -4,7 +4,7 @@ import path from 'path';
 import { readAsync, writeAsync } from 'fs-jetpack';
 import { TOptions } from '../utils/parseArgumentsIntoOptions';
 import renderTemplate from '../utils/renderTempate';
-// import execAsRoot from '../utils/execAsRoot';
+import execAsRoot from '../utils/execAsRoot';
 
 const writeConfig = async (
   fileName: string,
@@ -19,7 +19,7 @@ const writeConfig = async (
   const configContent = await renderTemplate(configTemplate, {
     ...options,
     display: false,
-    yarn: true,
+    yarn: false,
   });
 
   if (configContent) {
@@ -38,15 +38,15 @@ export async function installFish(
 ) {
   task.output = 'Installing...';
 
-  // const commands = [
-  //   'apt-add-repository ppa:fish-shell/release-3',
-  //   'apt-get update',
-  //   'apt-get install fish -y',
-  // ];
+  const commands = [
+    'apt-add-repository ppa:fish-shell/release-3',
+    'apt-get update',
+    'apt-get install fish -y',
+  ];
 
-  // for (const command of commands) {
-  //   await execAsRoot(command, options.password!);
-  // }
+  for (const command of commands) {
+    await execAsRoot(command, options.password!);
+  }
 
   task.output = 'Setting config...';
 
