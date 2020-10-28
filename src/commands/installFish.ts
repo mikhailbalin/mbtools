@@ -1,10 +1,11 @@
 import Listr from 'listr';
 import os from 'os';
 import path from 'path';
+import { spawn } from 'child_process';
 import { readAsync, writeAsync } from 'fs-jetpack';
 import { TOptions } from '../utils/parseArgumentsIntoOptions';
 import renderTemplate from '../utils/renderTempate';
-import execAsRoot from '../utils/execAsRoot';
+// import execAsRoot from '../utils/execAsRoot';
 
 const writeConfig = async (
   fileName: string,
@@ -36,16 +37,40 @@ export async function installFish(
   task: Listr.ListrTaskWrapper,
   options: Omit<TOptions, 'skipPrompts'>,
 ) {
-  task.output = 'Installing...';
+  let isInstalled = false;
 
-  const commands = [
-    'apt-add-repository ppa:fish-shell/release-3',
-    'apt-get update',
-    'apt-get install fish -y',
-  ];
+  const checkInstall = spawn('fish -v', {
+    shell: true,
+  });
 
-  for (const command of commands) {
-    await execAsRoot(command, options.password!);
+  checkInstall.stdout.on('data', (data) => {
+    console.log(`checkInstall stdout:\n${data}`);
+    const chunk = data.toString('utf8');
+    if (chunk.includes('fish')) {
+      isInstalled = true;
+    }
+  });
+
+  checkInstall.stderr.on('data', (data) => {
+    console.log(`checkInstall stderr:\n${data}`);
+  });
+
+  checkInstall.on('error', (error) => {
+    Promise.reject(new Error(`checkInstall error: ${error.message}`));
+  });
+
+  if (!isInstalled) {
+    task.output = 'Installing...';
+
+    // const commands = [
+    //   'apt-add-repository ppa:fish-shell/release-3',
+    //   'apt-get update',
+    //   'apt-get install fish -y',
+    // ];
+
+    // for (const command of commands) {
+    //   await execAsRoot(command, options.password!);
+    // }
   }
 
   task.output = 'Setting config...';
@@ -53,5 +78,29 @@ export async function installFish(
   await writeConfig('config', options);
   await writeConfig('fish_prompt', options);
 
-  return Promise.resolve('Fish installed');
+  // const makeDefault = spawn('chsh -s /usr/bin/fish', {
+  //   shell: true,
+  // });
+
+  // makeDefault.stderr.on('data', (data: Buffer) => {
+  //   const chunk = data.toString('utf8');
+
+  //   if (chunk.includes('Password')) {
+  //     makeDefault.stdin.write(`${options.password}\n`, (error) => {
+  //       if (error) {
+  //         Promise.reject(
+  //           new Error(`makeDefault password error: ${error.message}`),
+  //         );
+  //       }
+  //     });
+  //   }
+  // });
+
+  // makeDefault.on('error', (error) => {
+  //   Promise.reject(new Error(`makeDefault error: ${error.message}`));
+  // });
+
+  // makeDefault.on('close', (code) => {
+  //   return Promise.resolve(`Fish installed and made default with code ${code}`);
+  // });
 }

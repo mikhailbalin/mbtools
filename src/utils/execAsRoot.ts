@@ -7,12 +7,12 @@ const execAsRoot = (command: string, password: string) => {
     });
 
     // superuserCommand.stdout.on('data', (data) => {
-    //   console.log(`child stdout:\n${data}`);
+    //   console.log(`execAsRoot stdout:\n${data}`);
     // });
 
     superuserCommand.stderr.on('data', (data: Buffer) => {
       const chunk = data.toString('utf8');
-      // console.log(`child stderr:\n${chunk}`);
+      // console.log(`execAsRoot stderr:\n${chunk}`);
 
       if (chunk.includes('password for')) {
         superuserCommand.stdin.write(`${password}\n`, (error) => {
