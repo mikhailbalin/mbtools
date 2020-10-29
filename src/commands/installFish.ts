@@ -1,7 +1,7 @@
 import Listr from 'listr';
 import os from 'os';
 import path from 'path';
-// import { spawn } from 'child_process';
+import execa from 'execa';
 import { readAsync, writeAsync } from 'fs-jetpack';
 import { TOptions } from '../utils/parseArgumentsIntoOptions';
 import { renderTemplate, checkInstalled, execAsRoot } from '../utils';
@@ -36,7 +36,7 @@ export async function installFish(
   task: Listr.ListrTaskWrapper,
   options: Omit<TOptions, 'skipPrompts'>,
 ) {
-  const isInstalled = await checkInstalled('fish');
+  const isInstalled = await checkInstalled('fish -v');
 
   if (!isInstalled) {
     task.output = 'Installing...';
@@ -57,29 +57,16 @@ export async function installFish(
   await writeConfig('config', options);
   await writeConfig('fish_prompt', options);
 
-  // const makeDefault = spawn('chsh -s /usr/bin/fish', {
-  //   shell: true,
-  // });
+  if (isInstalled) return;
 
-  // makeDefault.stderr.on('data', (data: Buffer) => {
-  //   const chunk = data.toString('utf8');
+  const makeDefaultShell = execa.command('chsh -s /usr/bin/fish');
 
-  //   if (chunk.includes('Password')) {
-  //     makeDefault.stdin.write(`${options.password}\n`, (error) => {
-  //       if (error) {
-  //         Promise.reject(
-  //           new Error(`makeDefault password error: ${error.message}`),
-  //         );
-  //       }
-  //     });
-  //   }
-  // });
+  makeDefaultShell.stderr?.on('data', (data) => {
+    const chunk = data.toString('utf8');
+    if (chunk.includes('Password')) {
+      makeDefaultShell.stdin?.write(`${options.password}\n`);
+    }
+  });
 
-  // makeDefault.on('error', (error) => {
-  //   Promise.reject(new Error(`makeDefault error: ${error.message}`));
-  // });
-
-  // makeDefault.on('close', (code) => {
-  //   return Promise.resolve(`Fish installed and made default with code ${code}`);
-  // });
+  await makeDefaultShell;
 }
