@@ -1,7 +1,7 @@
 import ejs from 'ejs';
 import { TOptions } from './parseArgumentsIntoOptions';
 
-export default async function render(
+export default async function renderTemplate(
   content: string | undefined,
   options: Omit<TOptions, 'skipPrompts'> & { display: boolean; yarn: boolean },
 ) {
