@@ -1,11 +1,10 @@
 import Listr from 'listr';
 import os from 'os';
 import path from 'path';
-import { spawn } from 'child_process';
+// import { spawn } from 'child_process';
 import { readAsync, writeAsync } from 'fs-jetpack';
 import { TOptions } from '../utils/parseArgumentsIntoOptions';
-import renderTemplate from '../utils/renderTempate';
-// import execAsRoot from '../utils/execAsRoot';
+import { renderTemplate, checkInstalled, execAsRoot } from '../utils';
 
 const writeConfig = async (
   fileName: string,
@@ -37,40 +36,20 @@ export async function installFish(
   task: Listr.ListrTaskWrapper,
   options: Omit<TOptions, 'skipPrompts'>,
 ) {
-  let isInstalled = false;
-
-  const checkInstall = spawn('fish -v', {
-    shell: true,
-  });
-
-  checkInstall.stdout.on('data', (data) => {
-    console.log(`checkInstall stdout:\n${data}`);
-    const chunk = data.toString('utf8');
-    if (chunk.includes('fish')) {
-      isInstalled = true;
-    }
-  });
-
-  checkInstall.stderr.on('data', (data) => {
-    console.log(`checkInstall stderr:\n${data}`);
-  });
-
-  checkInstall.on('error', (error) => {
-    Promise.reject(new Error(`checkInstall error: ${error.message}`));
-  });
+  const isInstalled = await checkInstalled('fish');
 
   if (!isInstalled) {
     task.output = 'Installing...';
 
-    // const commands = [
-    //   'apt-add-repository ppa:fish-shell/release-3',
-    //   'apt-get update',
-    //   'apt-get install fish -y',
-    // ];
+    const commands = [
+      'apt-add-repository ppa:fish-shell/release-3',
+      'apt-get update',
+      'apt-get install fish -y',
+    ];
 
-    // for (const command of commands) {
-    //   await execAsRoot(command, options.password!);
-    // }
+    for (const command of commands) {
+      await execAsRoot(command, options.password!);
+    }
   }
 
   task.output = 'Setting config...';
