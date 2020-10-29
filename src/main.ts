@@ -1,4 +1,5 @@
 import Listr from 'listr';
+import chalk from 'chalk';
 import {
   updateSystem,
   configureGit,
@@ -49,6 +50,10 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
     await tasks.run();
     console.info(`\n${EVERYTHING_READY}`);
   } catch (error) {
-    console.error(`\n${SOMETHING_BROKE}.\n${error}`);
+    if (error.message) {
+      console.error(`\n${chalk.red.bold('ERROR')} ${error.message}`);
+    } else {
+      console.error(`\n${SOMETHING_BROKE}`);
+    }
   }
 }

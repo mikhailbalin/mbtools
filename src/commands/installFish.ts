@@ -59,14 +59,14 @@ export async function installFish(
 
   if (isInstalled) return;
 
-  const makeDefaultShell = execa.command('chsh -s /usr/bin/fish');
+  const defaultShellProcess = execa.command('chsh -s /usr/bin/fish');
 
-  makeDefaultShell.stderr?.on('data', (data) => {
+  defaultShellProcess.stderr?.on('data', (data) => {
     const chunk = data.toString('utf8');
     if (chunk.includes('Password')) {
-      makeDefaultShell.stdin?.write(`${options.password}\n`);
+      defaultShellProcess.stdin?.write(`${options.password}\n`);
     }
   });
 
-  await makeDefaultShell;
+  await defaultShellProcess;
 }
