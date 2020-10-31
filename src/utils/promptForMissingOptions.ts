@@ -48,8 +48,7 @@ export default async function promptForMissingOptions(
 
   const shouldAskPassword =
     skipPrompts ||
-    (answers &&
-      includesAny([ARG_UPDATE, ARG_SSH, ARG_FISH, ARG_BREW], answers));
+    (answers && includesAny([ARG_UPDATE, ARG_FISH, ARG_BREW], answers));
 
   if (!password && shouldAskPassword) {
     const resault = await inquirer.prompt({
