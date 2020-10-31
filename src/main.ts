@@ -4,7 +4,7 @@ import {
   updateSystem,
   configureGit,
   installFish,
-  // configureSSH,
+  configureSSH,
 } from './commands';
 import { TOptions } from './utils/parseArgumentsIntoOptions';
 import {
@@ -39,11 +39,11 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
       task: (ctx, task: Listr.ListrTaskWrapper) => installFish(task, options),
       enabled: () => options.fish,
     },
-    // {
-    //   title: 'Configure SSH',
-    //   task: () => configureSSH(),
-    //   enabled: () => options.ssh,
-    // },
+    {
+      title: 'Configure SSH',
+      task: () => configureSSH(),
+      enabled: () => options.ssh,
+    },
   ]);
 
   try {
