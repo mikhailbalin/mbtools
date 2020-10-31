@@ -1,8 +1,6 @@
 # mbtools
 
-⌨ A CLI to bootstrap my dev tools
-
-Commands defined by `bin `key inside `package.json`.
+Commands defined by `bin` key inside `package.json`.
 
 ## Development
 
