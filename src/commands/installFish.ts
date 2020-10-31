@@ -40,4 +40,6 @@ export async function installFish(
   });
 
   await defaultShellProcess;
+
+  await execa.command('set fish_greeting', { shell: 'fish' });
 }
