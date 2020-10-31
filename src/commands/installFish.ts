@@ -1,36 +1,7 @@
 import Listr from 'listr';
-import os from 'os';
-import path from 'path';
 import execa from 'execa';
-import { readAsync, writeAsync } from 'fs-jetpack';
-import { TOptions } from '../utils/parseArgumentsIntoOptions';
-import { renderTemplate, checkInstalled, execAsRoot } from '../utils';
-
-const writeConfig = async (
-  fileName: string,
-  options: Omit<TOptions, 'skipPrompts'>,
-) => {
-  const templatePath = path.join(
-    __dirname,
-    `../templates/${fileName}.fish.ejs`,
-  );
-
-  const configTemplate = await readAsync(templatePath);
-  const configContent = await renderTemplate(configTemplate, {
-    ...options,
-    display: false,
-    yarn: false,
-  });
-
-  if (configContent) {
-    await writeAsync(
-      `${os.homedir()}/.config/fish${
-        fileName !== 'config' ? '/functions' : ''
-      }/${fileName}.fish`,
-      configContent,
-    );
-  }
-};
+import type { TOptions } from '../utils/parseArgumentsIntoOptions';
+import { checkInstalled, execAsRoot, setFishConfig } from '../utils';
 
 export async function installFish(
   task: Listr.ListrTaskWrapper,
@@ -54,8 +25,8 @@ export async function installFish(
 
   task.output = 'Setting config...';
 
-  await writeConfig('config', options);
-  await writeConfig('fish_prompt', options);
+  await setFishConfig('config', options);
+  await setFishConfig('fish_prompt', options);
 
   if (isInstalled) return;
 
