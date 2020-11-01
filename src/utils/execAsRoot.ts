@@ -19,8 +19,8 @@ const execAsRoot = async (command: string, password: string) => {
 
   try {
     await superUserProcess;
-  } catch {
-    throw new Error(`Incorrect password`);
+  } catch (error) {
+    throw new Error(error.shortMessage);
   }
 };
 
