@@ -20,6 +20,6 @@ if (!exists(configFile)) {
   write(configFile, JSON.stringify(initialContext, undefined, 2));
 }
 
-export const context = new Configstore('mbtools', undefined, {
+export const config = new Configstore('mbtools', undefined, {
   configPath: configFile,
 });

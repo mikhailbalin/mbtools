@@ -13,6 +13,7 @@ import {
   EVERYTHING_READY,
   SOMETHING_BROKE,
 } from './constants';
+import { config } from './config';
 
 const none = <T>(arr: T[], fn = Boolean) => !arr.some(fn);
 
@@ -37,21 +38,8 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
     },
     {
       title: 'Configure fish',
-      task: async (ctx: TContext, task: ListrTaskWrapper) => {
-        const { fish, ssh, brew } = rest;
-        await installFish(
-          task,
-          {
-            fish,
-            ssh,
-            brew,
-            display: false,
-            yarn: false,
-          },
-          password!,
-        );
-        ctx.fish = true;
-      },
+      task: (ctx: TContext, task: ListrTaskWrapper) =>
+        installFish(task, ctx, password!),
       enabled: () => options.fish,
     },
     {
@@ -67,7 +55,8 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
   ]);
 
   try {
-    await tasks.run();
+    const ctx = await tasks.run(config.all);
+    config.all = ctx;
     console.info(`\n${EVERYTHING_READY}`);
   } catch (error) {
     if (error.message) {

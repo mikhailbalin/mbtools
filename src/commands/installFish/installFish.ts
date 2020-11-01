@@ -1,19 +1,17 @@
 import { ListrTaskWrapper } from 'listr';
 import execa from 'execa';
 import type { TContext } from '../../types';
-import { checkInstalled, execAsRoot } from '../../utils';
+import { execAsRoot } from '../../utils';
 import { makeDefaultShell } from './makeDefaultShell';
 import setFishConfig from './setFishConfig';
 
 export async function installFish(
   task: ListrTaskWrapper,
-  context: TContext,
+  ctx: TContext,
   password: string,
 ) {
   try {
-    const isInstalled = await checkInstalled('fish -v');
-
-    if (!isInstalled) {
+    if (!ctx.fish) {
       task.output = 'Installing...';
 
       const commands = [
@@ -25,14 +23,16 @@ export async function installFish(
       for (const command of commands) {
         await execAsRoot(command, password);
       }
+
+      ctx.fish = true;
     }
 
     task.output = 'Setting config...';
 
-    await setFishConfig('config', context);
-    await setFishConfig('fish_prompt', context);
+    await setFishConfig('config', ctx);
+    await setFishConfig('fish_prompt', ctx);
 
-    if (isInstalled) return;
+    if (ctx.fish) return;
 
     await makeDefaultShell(password);
 
