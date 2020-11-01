@@ -1,7 +1,7 @@
 import execa from 'execa';
 import { appendAsync, existsAsync } from 'fs-jetpack';
 import { execAsRoot } from '../utils';
-import { getConfigPath } from '../utils';
+import { getConfigPath } from './installFish';
 
 export async function installBrew(password: string) {
   try {

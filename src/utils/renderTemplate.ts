@@ -1,9 +1,9 @@
 import ejs from 'ejs';
-import type { TOptions } from '../types';
+import type { TFishConfigOptions } from '../types';
 
 export default async function renderTemplate(
   content: string | undefined,
-  options: Omit<TOptions, 'skipPrompts'> & { display: boolean; yarn: boolean },
+  options: TFishConfigOptions,
 ) {
   if (!content) return '';
   return await ejs.render(content, options, { async: true });

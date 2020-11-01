@@ -38,7 +38,15 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
     {
       title: 'Configure fish',
       task: async (ctx: TFishConfigOptions, task: ListrTaskWrapper) => {
-        await installFish(task, options);
+        const { fish, ssh, brew } = rest;
+        await installFish(task, {
+          password: password!,
+          fish,
+          ssh,
+          brew,
+          display: false,
+          yarn: false,
+        });
         ctx.fish = true;
       },
       enabled: () => options.fish,

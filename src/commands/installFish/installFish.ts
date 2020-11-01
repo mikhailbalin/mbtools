@@ -1,11 +1,13 @@
-import Listr from 'listr';
+import { ListrTaskWrapper } from 'listr';
 import execa from 'execa';
-import type { TOptions } from '../types';
-import { checkInstalled, execAsRoot, setFishConfig } from '../utils';
+import type { TFishConfigOptions } from '../../types';
+import { checkInstalled, execAsRoot } from '../../utils';
+import { makeDefaultShell } from './makeDefaultShell';
+import setFishConfig from './setFishConfig';
 
 export async function installFish(
-  task: Listr.ListrTaskWrapper,
-  options: Omit<TOptions, 'skipPrompts'>,
+  task: ListrTaskWrapper,
+  options: TFishConfigOptions,
 ) {
   try {
     const isInstalled = await checkInstalled('fish -v');
@@ -20,7 +22,7 @@ export async function installFish(
       ];
 
       for (const command of commands) {
-        await execAsRoot(command, options.password!);
+        await execAsRoot(command, options.password);
       }
     }
 
@@ -31,16 +33,7 @@ export async function installFish(
 
     if (isInstalled) return;
 
-    const defaultShellProcess = execa.command('chsh -s /usr/bin/fish');
-
-    defaultShellProcess.stderr?.on('data', (data) => {
-      const chunk = data.toString('utf8');
-      if (chunk.includes('Password')) {
-        defaultShellProcess.stdin?.write(`${options.password}\n`);
-      }
-    });
-
-    await defaultShellProcess;
+    await makeDefaultShell(options.password);
 
     await execa.command('set fish_greeting', { shell: 'fish' });
   } catch {
