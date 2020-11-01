@@ -4,13 +4,15 @@ import { writeAsync } from 'fs-jetpack';
 import { Dropbox } from 'dropbox';
 import fetch from 'node-fetch';
 import execa from 'execa';
+import { ListrTaskWrapper } from 'listr';
+import { TContext } from '../types';
 
 const dbx = new Dropbox({
   accessToken: process.env.DROPBOX_ACCESS_TOKEN,
   fetch,
 });
 
-export async function configureSSH() {
+export async function configureSSH(ctx: TContext, task: ListrTaskWrapper) {
   try {
     const response: any = await dbx.filesListFolder({ path: '/ssh' });
     const sshFolderPath = path.join(os.homedir(), '.ssh');
@@ -23,7 +25,9 @@ export async function configureSSH() {
     }
 
     await execa.command(`chmod 700 ${sshFolderPath}`);
+
+    ctx.ssh = true;
   } catch {
-    throw new Error('SSH config');
+    task.skip('SSH config error');
   }
 }
