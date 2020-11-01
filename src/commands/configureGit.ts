@@ -13,6 +13,6 @@ export async function configureGit(task: ListrTaskWrapper) {
       await execa('git', ['config', '--global', k, v]);
     }
   } catch (error) {
-    task.skip(error.shortMessage);
+    task.skip(error.message);
   }
 }
