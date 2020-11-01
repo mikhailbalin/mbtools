@@ -1,6 +1,7 @@
 import execa from 'execa';
+import { ListrTaskWrapper } from 'listr';
 
-export async function configureGit() {
+export async function configureGit(task: ListrTaskWrapper) {
   try {
     const settings = new Map([
       ['user.name', 'Misha Balin'],
@@ -11,7 +12,7 @@ export async function configureGit() {
     for (const [k, v] of settings.entries()) {
       await execa('git', ['config', '--global', k, v]);
     }
-  } catch {
-    throw new Error('Git initialization');
+  } catch (error) {
+    task.skip(error.shortMessage);
   }
 }

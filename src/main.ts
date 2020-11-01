@@ -1,4 +1,4 @@
-import Listr from 'listr';
+import Listr, { ListrTaskWrapper } from 'listr';
 import chalk from 'chalk';
 import {
   updateSystem,
@@ -27,17 +27,17 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
   const tasks = new Listr([
     {
       title: 'System update',
-      task: () => updateSystem(password!),
+      task: (_, task: ListrTaskWrapper) => updateSystem(task, password!),
       enabled: () => options.update,
     },
     {
       title: 'Initialize git',
-      task: () => configureGit(),
+      task: (_, task: ListrTaskWrapper) => configureGit(task),
       enabled: () => options.git,
     },
     {
       title: 'Configure fish',
-      task: async (ctx: TFishConfigOptions, task: Listr.ListrTaskWrapper) => {
+      task: async (ctx: TFishConfigOptions, task: ListrTaskWrapper) => {
         await installFish(task, options);
         ctx.fish = true;
       },
