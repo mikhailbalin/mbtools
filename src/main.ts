@@ -5,6 +5,7 @@ import {
   configureGit,
   installFish,
   configureSSH,
+  installBrew,
 } from './commands';
 import { TOptions } from './utils/parseArgumentsIntoOptions';
 import {
@@ -43,6 +44,11 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
       title: 'Configure SSH',
       task: () => configureSSH(),
       enabled: () => options.ssh,
+    },
+    {
+      title: 'Install Brew',
+      task: () => installBrew(password!),
+      enabled: () => options.brew,
     },
   ]);
 
