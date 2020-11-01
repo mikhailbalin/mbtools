@@ -1,4 +1,4 @@
-import './dotenvSetup';
+import './config';
 import { parseArgumentsIntoOptions, promptForMissingOptions } from './utils';
 import { setupSystem } from './main';
 

@@ -8,16 +8,18 @@ import { TContext } from './types';
 dotenv.config();
 
 const configFile = path.join(os.homedir(), 'mbtools.json');
+const initialContext: TContext = {
+  fish: false,
+  ssh: false,
+  brew: false,
+  display: false,
+  yarn: false,
+};
 
 if (!exists(configFile)) {
-  const config: TContext = {
-    fish: false,
-    ssh: false,
-    brew: false,
-    display: false,
-    yarn: false,
-  };
-  write(configFile, JSON.stringify(config, null, 2));
+  write(configFile, JSON.stringify(initialContext, undefined, 2));
 }
 
-new Configstore(configFile, { foo: 'bar' });
+export const context = new Configstore('mbtools', undefined, {
+  configPath: configFile,
+});
