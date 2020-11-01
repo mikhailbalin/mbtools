@@ -23,7 +23,7 @@ export async function configureSSH() {
     }
 
     await execa.command(`chmod 700 ${sshFolderPath}`);
-  } catch (error) {
+  } catch {
     throw new Error('SSH config');
   }
 }
