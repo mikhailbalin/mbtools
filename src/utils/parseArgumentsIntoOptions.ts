@@ -33,5 +33,4 @@ function parseArgumentsIntoOptions(rawArgs: string[]) {
   };
 }
 
-export type TOptions = ReturnType<typeof parseArgumentsIntoOptions>;
 export default parseArgumentsIntoOptions;

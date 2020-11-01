@@ -1,7 +1,7 @@
 import os from 'os';
 import path from 'path';
 import { readAsync, writeAsync } from 'fs-jetpack';
-import { TOptions } from './parseArgumentsIntoOptions';
+import type { TOptions } from '../types';
 import renderTemplate from './renderTemplate';
 
 export const getConfigPath = (fileName: string) =>

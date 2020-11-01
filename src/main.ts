@@ -7,7 +7,7 @@ import {
   configureSSH,
   installBrew,
 } from './commands';
-import { TOptions } from './utils/parseArgumentsIntoOptions';
+import type { TOptions, TFishConfigOptions } from './types';
 import {
   NOTHING_HAPPENED,
   EVERYTHING_READY,
@@ -37,7 +37,10 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
     },
     {
       title: 'Configure fish',
-      task: (ctx, task: Listr.ListrTaskWrapper) => installFish(task, options),
+      task: async (ctx: TFishConfigOptions, task: Listr.ListrTaskWrapper) => {
+        await installFish(task, options);
+        ctx.fish = true;
+      },
       enabled: () => options.fish,
     },
     {

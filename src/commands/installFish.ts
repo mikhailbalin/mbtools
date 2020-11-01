@@ -1,6 +1,6 @@
 import Listr from 'listr';
 import execa from 'execa';
-import type { TOptions } from '../utils/parseArgumentsIntoOptions';
+import type { TOptions } from '../types';
 import { checkInstalled, execAsRoot, setFishConfig } from '../utils';
 
 export async function installFish(

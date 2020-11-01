@@ -1,5 +1,5 @@
 import ejs from 'ejs';
-import { TOptions } from './parseArgumentsIntoOptions';
+import type { TOptions } from '../types';
 
 export default async function renderTemplate(
   content: string | undefined,

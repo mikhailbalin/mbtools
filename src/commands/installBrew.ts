@@ -13,9 +13,13 @@ export async function installBrew(password: string) {
   );
   await execa.command('mkdir ~/.linuxbrew/bin');
   await execa.command('ln -s ~/.linuxbrew/Homebrew/bin/brew ~/.linuxbrew/bin');
-  const path = await existsAsync(getConfigPath('fish.config'));
-  if (path === 'file') {
-    await appendAsync(path, '\n# Brew\neval (~/.linuxbrew/bin/brew shellenv)');
+
+  const result = await existsAsync(getConfigPath('fish.config'));
+  if (result === 'file') {
+    await appendAsync(
+      result,
+      '\n# Brew\neval (~/.linuxbrew/bin/brew shellenv)',
+    );
   } else {
   }
 }

@@ -1,6 +1,6 @@
 import inquirer from 'inquirer';
 import { ARG_BREW, ARG_FISH, ARG_GIT, ARG_SSH, ARG_UPDATE } from '../constants';
-import { TOptions } from './parseArgumentsIntoOptions';
+import type { TOptions } from '../types';
 
 const includesAny = <T>(arr: T[], values: T[]) =>
   values.some((v) => arr.includes(v));
