@@ -9,6 +9,7 @@ dotenv.config();
 
 const configFile = path.join(os.homedir(), 'mbtools.json');
 const initialContext: TContext = {
+  git: false,
   fish: false,
   ssh: false,
   brew: false,
