@@ -6,6 +6,7 @@ import fetch from 'node-fetch';
 import execa from 'execa';
 import { ListrTaskWrapper } from 'listr';
 import { TContext } from '../types';
+import { setFishConfig } from './installFish';
 
 const dbx = new Dropbox({
   accessToken: process.env.DROPBOX_ACCESS_TOKEN,
@@ -25,6 +26,8 @@ export async function configureSSH(ctx: TContext, task: ListrTaskWrapper) {
     }
 
     await execa.command(`chmod 700 ${sshFolderPath}`);
+
+    setFishConfig('config', { ...ctx, ssh: true });
 
     ctx.ssh = true;
   } catch {

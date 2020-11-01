@@ -1,14 +1,16 @@
 import execa from 'execa';
-import { appendAsync, existsAsync } from 'fs-jetpack';
+import { ListrTaskWrapper } from 'listr';
+import { TContext } from '../types';
 import { execAsRoot } from '../utils';
-import { getConfigPath } from './installFish';
+import { setFishConfig } from './installFish';
 
-export async function installBrew(password: string) {
+export async function installBrew(
+  ctx: TContext,
+  task: ListrTaskWrapper,
+  password: string,
+) {
   try {
-    await execAsRoot(
-      'apt-get install build-essential curl file git -y',
-      password,
-    );
+    await execAsRoot('apt-get install build-essential -y', password);
     await execa.command(
       'git clone https://github.com/Homebrew/brew ~/.linuxbrew/Homebrew',
     );
@@ -17,15 +19,10 @@ export async function installBrew(password: string) {
       'ln -s ~/.linuxbrew/Homebrew/bin/brew ~/.linuxbrew/bin',
     );
 
-    const result = await existsAsync(getConfigPath('fish.config'));
-    if (result === 'file') {
-      await appendAsync(
-        result,
-        '\n# Brew\neval (~/.linuxbrew/bin/brew shellenv)',
-      );
-    } else {
-    }
+    setFishConfig('config', { ...ctx, brew: true });
+
+    ctx.brew = true;
   } catch {
-    throw new Error('Brew install');
+    task.skip('Brew install error');
   }
 }
