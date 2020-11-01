@@ -1,10 +1,10 @@
 import ejs from 'ejs';
-import type { TFishConfigOptions } from '../types';
+import type { TContext } from '../types';
 
 export default async function renderTemplate(
-  content: string | undefined,
-  options: TFishConfigOptions,
+  template: string | undefined,
+  data: TContext,
 ) {
-  if (!content) return '';
-  return await ejs.render(content, options, { async: true });
+  if (!template) return '';
+  return await ejs.render(template, data, { async: true });
 }
