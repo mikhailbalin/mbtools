@@ -1,2 +1,2 @@
 export { installFish } from './installFish';
-export { getConfigPath } from './getConfigPath';
+export { default as setFishConfig } from './setFishConfig';

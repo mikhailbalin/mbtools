@@ -19,6 +19,11 @@ set -gx DISPLAY (cat /etc/resolv.conf | grep nameserver | awk '{print $2; exit;}
 # Set Display Scaling
 set -gx GDK_SCALE 2
 <% } -%>
+<% if (brew) { -%>
+
+# Brew
+eval (~/.linuxbrew/bin/brew shellenv)
+<% } -%>
 <% if (yarn) { -%>
 
 # Add Yarn to path

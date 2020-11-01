@@ -33,24 +33,41 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
     },
     {
       title: 'Initialize git',
-      task: (_, task: ListrTaskWrapper) => configureGit(task),
+      task: (ctx: TContext, task: ListrTaskWrapper) => configureGit(ctx, task),
       enabled: () => options.git,
+      skip: (ctx: TContext) => ctx.git && 'Git already configured',
     },
     {
       title: 'Configure fish',
       task: (ctx: TContext, task: ListrTaskWrapper) =>
         installFish(task, ctx, password!),
       enabled: () => options.fish,
+      skip: (ctx: TContext) => ctx.fish && 'Fish already installed',
     },
     {
       title: 'Configure SSH',
-      task: () => configureSSH(),
+      task: (ctx: TContext, task: ListrTaskWrapper) => configureSSH(ctx, task),
       enabled: () => options.ssh,
+      skip: (ctx: TContext) => {
+        if (!ctx.fish) {
+          return 'Fish should be installed';
+        }
+
+        if (ctx.ssh) return 'SSH already configured';
+      },
     },
     {
       title: 'Install Brew',
-      task: () => installBrew(password!),
+      task: (ctx: TContext, task: ListrTaskWrapper) =>
+        installBrew(ctx, task, password!),
       enabled: () => options.brew,
+      skip: (ctx: TContext) => {
+        if (!ctx.fish) {
+          return 'Fish should be installed';
+        }
+
+        if (ctx.brew) return 'Brew already installed';
+      },
     },
   ]);
 

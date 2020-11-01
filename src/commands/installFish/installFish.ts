@@ -11,33 +11,27 @@ export async function installFish(
   password: string,
 ) {
   try {
-    if (!ctx.fish) {
-      task.output = 'Installing...';
+    task.output = 'Installing...';
 
-      const commands = [
-        'apt-add-repository ppa:fish-shell/release-3',
-        'apt-get update',
-        'apt-get install fish -y',
-      ];
+    const commands = [
+      'apt-add-repository ppa:fish-shell/release-3',
+      'apt-get update',
+      'apt-get install fish -y',
+    ];
 
-      for (const command of commands) {
-        await execAsRoot(command, password);
-      }
-
-      ctx.fish = true;
+    for (const command of commands) {
+      await execAsRoot(command, password);
     }
 
     task.output = 'Setting config...';
 
     await setFishConfig('config', ctx);
     await setFishConfig('fish_prompt', ctx);
-
-    if (ctx.fish) return;
-
     await makeDefaultShell(password);
-
     await execa.command('set fish_greeting', { shell: 'fish' });
+
+    ctx.fish = true;
   } catch {
-    throw new Error('Fish config');
+    task.skip('Fish install error');
   }
 }
