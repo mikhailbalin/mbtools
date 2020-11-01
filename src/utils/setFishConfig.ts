@@ -4,6 +4,14 @@ import { readAsync, writeAsync } from 'fs-jetpack';
 import { TOptions } from './parseArgumentsIntoOptions';
 import renderTemplate from './renderTemplate';
 
+export const getConfigPath = (fileName: string) =>
+  path.join(
+    os.homedir(),
+    '.config',
+    'fish',
+    fileName !== 'config' ? `functions/${fileName}.fish` : `${fileName}.fish`,
+  );
+
 const setFishConfig = async (
   fileName: string,
   options: Omit<TOptions, 'skipPrompts'>,
@@ -20,15 +28,8 @@ const setFishConfig = async (
     yarn: false,
   });
 
-  const filePath = path.join(
-    os.homedir(),
-    '.config',
-    'fish',
-    fileName !== 'config' ? `functions/${fileName}.fish` : `${fileName}.fish`,
-  );
-
   if (configContent) {
-    await writeAsync(filePath, configContent);
+    await writeAsync(getConfigPath(fileName), configContent);
   }
 };
 
