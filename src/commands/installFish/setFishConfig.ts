@@ -7,7 +7,9 @@ import { getConfigPath } from './getConfigPath';
 const setFishConfig = async (fileName: string, config: TContext) => {
   const templatePath = path.join(
     __dirname,
-    `../templates/${fileName}.fish.ejs`,
+    `..`,
+    `templates`,
+    `${fileName}.fish.ejs`,
   );
 
   const template = await readAsync(templatePath);
