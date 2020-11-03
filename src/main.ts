@@ -6,7 +6,7 @@ import {
   installFish,
   configureSSH,
   installBrew,
-  setupConfigs,
+  configureFish,
 } from './commands';
 import type { TOptions, TContext } from './types';
 import {
@@ -50,7 +50,7 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
             },
             {
               title: 'Setup configs',
-              task: () => setupConfigs(ctx, task, password!),
+              task: () => configureFish(ctx, task, password!),
             },
           ],
           { concurrent: true },

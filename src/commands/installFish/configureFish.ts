@@ -4,7 +4,7 @@ import type { TContext } from '../../types';
 import { makeDefaultShell } from './makeDefaultShell';
 import setFishConfig from './setFishConfig';
 
-export async function setupConfigs(
+export async function configureFish(
   ctx: TContext,
   task: ListrTaskWrapper,
   password: string,
