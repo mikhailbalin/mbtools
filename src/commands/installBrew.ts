@@ -1,6 +1,8 @@
 import execa from 'execa';
 import os from 'os';
 import path from 'path';
+import cloneDeep from 'lodash/cloneDeep';
+import set from 'lodash/set';
 import { ListrTaskWrapper } from 'listr';
 import { TContext } from '../types';
 import { execAsRoot } from '../utils';
@@ -30,9 +32,9 @@ export async function installBrew(
       `ln -s ${path.join(homebrewDir, 'bin', 'brew')} ${binDir}`,
     );
 
-    setFishConfig('config', { ...ctx, brew: true });
+    setFishConfig('config', set(cloneDeep(ctx), 'homebrew.brew', true));
 
-    ctx.brew = true;
+    ctx.homebrew.brew = true;
   } catch (error) {
     task.skip(error.message);
   }
