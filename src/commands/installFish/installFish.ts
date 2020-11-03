@@ -8,8 +8,6 @@ export async function installFish(
   password: string,
 ) {
   try {
-    // task.output = 'Installing...';
-
     const commands = [
       'apt-add-repository ppa:fish-shell/release-3',
       'apt-get update',
@@ -19,8 +17,6 @@ export async function installFish(
     for (const command of commands) {
       await execAsRoot(command, password);
     }
-
-    // task.output = 'Setting config...';
 
     ctx.fish = true;
   } catch (error) {

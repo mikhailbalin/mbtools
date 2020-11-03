@@ -1,11 +1,17 @@
 import path from 'path';
+import os from 'os';
 import { readAsync, writeAsync } from 'fs-jetpack';
 import ejs from 'ejs';
 import type { TContext } from '../../types';
-import { getConfigPath } from './getConfigPath';
 
 const setFishConfig = async (fileName: string, config: TContext) => {
   const teplateName = `${fileName}.fish.ejs`;
+  const configPath = path.join(
+    os.homedir(),
+    '.config',
+    'fish',
+    fileName !== 'config' ? `functions/${fileName}.fish` : `${fileName}.fish`,
+  );
   const templatePath = path.join(
     __dirname,
     '..',
@@ -18,7 +24,7 @@ const setFishConfig = async (fileName: string, config: TContext) => {
     const template = await readAsync(templatePath);
     if (!template) throw new Error(`${teplateName} template is not found`);
     const content = await ejs.render(template, config, { async: true });
-    await writeAsync(getConfigPath(fileName), content);
+    await writeAsync(configPath, content);
   } catch {
     throw new Error(`Error setting ${teplateName} template`);
   }
