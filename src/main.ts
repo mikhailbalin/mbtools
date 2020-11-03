@@ -40,10 +40,8 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
     },
     {
       title: 'Configure fish',
-      // task: (ctx: TContext, task: ListrTaskWrapper) =>
-      //   installFish(ctx, task, password!),
-      task: (ctx: TContext, task: ListrTaskWrapper) => {
-        return new Listr(
+      task: (ctx: TContext, task: ListrTaskWrapper) =>
+        new Listr(
           [
             {
               title: 'Install fish',
@@ -56,10 +54,8 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
             },
           ],
           { concurrent: true },
-        );
-      },
+        ),
       enabled: () => options.fish,
-      // skip: (ctx: TContext) => ctx.fish && 'Fish already installed',
     },
     {
       title: 'Configure SSH',
