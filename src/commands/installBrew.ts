@@ -1,5 +1,6 @@
 import execa from 'execa';
 import os from 'os';
+import path from 'path';
 import { ListrTaskWrapper } from 'listr';
 import { TContext } from '../types';
 import { execAsRoot } from '../utils';
@@ -10,20 +11,29 @@ export async function installBrew(
   task: ListrTaskWrapper,
   password: string,
 ) {
+  const linuxbrewDir = path.join(os.homedir(), '.linuxbrew');
+  const homebrewDir = path.join(linuxbrewDir, 'Homebrew');
+  const binDir = path.join(linuxbrewDir, 'bin');
+
   try {
+    task.output = 'Installing dependencies...';
     await execAsRoot('apt-get install build-essential -y', password);
+
+    task.output = 'Clonning repo...';
     await execa.command(
-      `git clone https://github.com/Homebrew/brew ${os.homedir()}/.linuxbrew/Homebrew`,
+      `git clone https://github.com/Homebrew/brew ${homebrewDir}`,
     );
-    await execa.command(`mkdir ${os.homedir()}/.linuxbrew/bin`);
+
+    task.output = 'Setting up...';
+    await execa.command(`mkdir ${binDir}`);
     await execa.command(
-      `ln -s ${os.homedir()}/.linuxbrew/Homebrew/bin/brew ${os.homedir()}/.linuxbrew/bin`,
+      `ln -s ${path.join(homebrewDir, 'bin', 'brew')} ${binDir}`,
     );
 
     setFishConfig('config', { ...ctx, brew: true });
 
     ctx.brew = true;
-  } catch {
-    task.skip('Brew install error');
+  } catch (error) {
+    task.skip(error.message);
   }
 }
