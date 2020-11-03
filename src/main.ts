@@ -6,6 +6,7 @@ import {
   installFish,
   configureSSH,
   installBrew,
+  setupConfigs,
 } from './commands';
 import type { TOptions, TContext } from './types';
 import {
@@ -39,10 +40,26 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
     },
     {
       title: 'Configure fish',
-      task: (ctx: TContext, task: ListrTaskWrapper) =>
-        installFish(task, ctx, password!),
+      // task: (ctx: TContext, task: ListrTaskWrapper) =>
+      //   installFish(ctx, task, password!),
+      task: (ctx: TContext, task: ListrTaskWrapper) => {
+        return new Listr(
+          [
+            {
+              title: 'Install fish',
+              task: () => installFish(ctx, task, password!),
+              skip: () => ctx.fish && 'Fish already installed',
+            },
+            {
+              title: 'Setup configs',
+              task: () => setupConfigs(ctx, task, password!),
+            },
+          ],
+          { concurrent: true },
+        );
+      },
       enabled: () => options.fish,
-      skip: (ctx: TContext) => ctx.fish && 'Fish already installed',
+      // skip: (ctx: TContext) => ctx.fish && 'Fish already installed',
     },
     {
       title: 'Configure SSH',
