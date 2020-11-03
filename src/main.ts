@@ -75,7 +75,7 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
       enabled: () => options.brew,
       skip: (ctx: TContext) => {
         if (!ctx.fish) return 'Fish should be installed';
-        if (ctx.brew) return 'Brew already installed';
+        if (ctx.homebrew.brew) return 'Brew already installed';
       },
     },
   ]);

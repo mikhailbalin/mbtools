@@ -5,6 +5,8 @@ import { Dropbox } from 'dropbox';
 import fetch from 'node-fetch';
 import execa from 'execa';
 import { ListrTaskWrapper } from 'listr';
+import cloneDeep from 'lodash/cloneDeep';
+import set from 'lodash/set';
 import { TContext } from '../types';
 import { setFishConfig } from './installFish';
 
@@ -27,7 +29,7 @@ export async function configureSSH(ctx: TContext, task: ListrTaskWrapper) {
 
     await execa.command(`chmod 700 ${sshFolderPath}`);
 
-    setFishConfig('config', { ...ctx, ssh: true });
+    setFishConfig('config', set(cloneDeep(ctx), 'ssh', true));
 
     ctx.ssh = true;
   } catch {
