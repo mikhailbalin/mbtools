@@ -14,7 +14,7 @@ export async function setupConfigs(
     await setFishConfig('fish_prompt', ctx);
     await makeDefaultShell(password);
     await execa.command('set fish_greeting', { shell: 'fish' });
-  } catch {
-    task.skip('Error setting fish configs');
+  } catch (error) {
+    task.skip(error.shortMessage || error.message);
   }
 }
