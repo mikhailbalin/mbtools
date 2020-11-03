@@ -49,6 +49,7 @@
     "@types/inquirer": "^7.3.1",
     "@types/jest": "^26.0.15",
     "@types/listr": "^0.14.2",
+    "@types/lodash": "^4.14.164",
     "@types/ncp": "^2.0.4",
     "@types/node": "^14.14.6",
     "@types/node-fetch": "^2.5.7",

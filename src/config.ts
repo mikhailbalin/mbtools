@@ -12,9 +12,11 @@ const initialContext: TContext = {
   git: false,
   fish: false,
   ssh: false,
-  brew: false,
+  homebrew: {
+    brew: false,
+    yarn: false,
+  },
   display: false,
-  yarn: false,
 };
 
 if (!exists(configFile)) {
