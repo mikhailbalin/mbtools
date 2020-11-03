@@ -62,10 +62,9 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
       task: (ctx: TContext, task: ListrTaskWrapper) => configureSSH(ctx, task),
       enabled: () => options.ssh,
       skip: (ctx: TContext) => {
-        if (!ctx.fish) {
-          return 'Fish should be installed';
-        }
-
+        if (!ctx.fish) return 'Fish should be installed';
+        if (!process.env.DROPBOX_ACCESS_TOKEN)
+          return 'DROPBOX_ACCESS_TOKEN is not provided, please get it here https://www.dropbox.com/developers/apps';
         if (ctx.ssh) return 'SSH already configured';
       },
     },
@@ -75,10 +74,7 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
         installBrew(ctx, task, password!),
       enabled: () => options.brew,
       skip: (ctx: TContext) => {
-        if (!ctx.fish) {
-          return 'Fish should be installed';
-        }
-
+        if (!ctx.fish) return 'Fish should be installed';
         if (ctx.brew) return 'Brew already installed';
       },
     },
