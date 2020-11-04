@@ -1,7 +1,13 @@
 import inquirer from 'inquirer';
-import { ARG_BREW, ARG_FISH, ARG_GIT, ARG_SSH, ARG_UPDATE } from '../constants';
-import type { TOptions } from '../types';
-import { promptMainOptions } from './prompts/promptMainOptions';
+import {
+  ARG_BREW,
+  ARG_FISH,
+  ARG_GIT,
+  ARG_SSH,
+  ARG_UPDATE,
+} from '../../constants';
+import type { TOptions } from '../../types';
+import { promptMainOptions } from './promptMainOptions';
 
 const includesAny = <T>(arr: T[], values: T[]) =>
   values.some((v) => arr.includes(v));
