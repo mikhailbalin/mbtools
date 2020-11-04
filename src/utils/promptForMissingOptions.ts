@@ -1,6 +1,14 @@
 import inquirer from 'inquirer';
-import { ARG_BREW, ARG_FISH, ARG_GIT, ARG_SSH, ARG_UPDATE } from '../constants';
+import {
+  READY,
+  ARG_BREW,
+  ARG_FISH,
+  ARG_GIT,
+  ARG_SSH,
+  ARG_UPDATE,
+} from '../constants';
 import type { TOptions } from '../types';
+import { config } from '../config';
 
 const includesAny = <T>(arr: T[], values: T[]) =>
   values.some((v) => arr.includes(v));
@@ -33,11 +41,34 @@ export default async function promptForMissingOptions(
         name: 'actions',
         message: 'What would you like to do?',
         choices: [
-          { name: 'Update system', value: ARG_UPDATE, checked: update },
-          { name: 'Configure git', value: ARG_GIT, checked: git },
-          { name: 'Configure ssh', value: ARG_SSH, checked: ssh },
-          { name: 'Install fish', value: ARG_FISH, checked: fish },
-          { name: 'Install Brew', value: ARG_BREW, checked: brew },
+          {
+            name: 'Update system',
+            value: ARG_UPDATE,
+            checked: update,
+          },
+          {
+            name: 'Configure git',
+            value: ARG_GIT,
+            checked: git,
+            disabled: config.get(ARG_GIT) && READY,
+          },
+          {
+            name: 'Configure ssh',
+            value: ARG_SSH,
+            checked: ssh,
+            disabled: config.get(ARG_SSH) && READY,
+          },
+          {
+            name: 'Configure or install fish',
+            value: ARG_FISH,
+            checked: fish,
+          },
+          {
+            name: 'Install Brew',
+            value: ARG_BREW,
+            checked: brew,
+            disabled: config.get(ARG_BREW) && READY,
+          },
         ],
       },
     ] as const;

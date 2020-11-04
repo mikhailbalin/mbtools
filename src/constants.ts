@@ -8,6 +8,7 @@ const status = {
 export const NOTHING_HAPPENED = `${status.DONE} Nothing happened`;
 export const EVERYTHING_READY = `${status.DONE} Everything ready`;
 export const SOMETHING_BROKE = `${status.ERROR} Something broke`;
+export const READY = 'ready';
 export const ARG_PASSWORD = 'password';
 export const ARG_UPDATE = 'update';
 export const ARG_GIT = 'git';
