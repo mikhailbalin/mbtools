@@ -53,21 +53,20 @@ export default async function promptForMissingOptions(
             disabled: config.get(ARG_GIT) && READY,
           },
           {
+            name: 'Configure or install fish',
+            value: ARG_FISH,
+            checked: fish,
+          },
+          {
             name: 'Configure ssh',
             value: ARG_SSH,
             checked: ssh,
             disabled: config.get(ARG_SSH) && READY,
           },
           {
-            name: 'Configure or install fish',
-            value: ARG_FISH,
-            checked: fish,
-          },
-          {
             name: 'Install Brew',
             value: ARG_BREW,
             checked: brew,
-            disabled: config.get(ARG_BREW) && READY,
           },
         ],
       },
