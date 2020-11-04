@@ -54,6 +54,6 @@ export const promptMainOptions = async ({
     },
   ] as const;
 
-  const resault = await inquirer.prompt(questions);
-  return resault.actions;
+  const result = await inquirer.prompt(questions);
+  return result.actions;
 };
