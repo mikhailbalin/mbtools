@@ -1,7 +1,7 @@
 import yargs from 'yargs';
-import type { IArguments } from '../types';
+import type { TOptions } from '../types';
 
-function parseArgumentsIntoOptions(rawArgs: string[]): IArguments {
+function parseArgumentsIntoOptions(rawArgs: string[]): TOptions {
   const argv = yargs(rawArgs.slice(2))
     .usage('Usage: DROPBOX_ACCESS_TOKEN=[string] $0 -p [string]')
     .options({

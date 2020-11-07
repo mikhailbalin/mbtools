@@ -1,4 +1,4 @@
-export interface IArguments {
+export type TOptions = {
   password: string | undefined;
   update: boolean;
   git: boolean;
@@ -6,7 +6,7 @@ export interface IArguments {
   fish: boolean;
   brew: boolean;
   skipPrompts: boolean;
-}
+};
 
 export type TContext = Pick<IArguments, 'git' | 'ssh' | 'fish'> & {
   brew:
