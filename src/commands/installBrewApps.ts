@@ -10,11 +10,12 @@ export async function installBrewApps(
   options: TBrew,
 ) {
   try {
-    task.output = 'Installing Brew apps...';
-
     const appsToInstall = keys(pickBy(options));
 
+    task.output = 'Updating Brew apps...';
     await execa.command('brew update', { shell: 'fish' });
+
+    task.output = 'Installing Brew apps...';
     await execa.command(`brew install ${appsToInstall}`, { shell: 'fish' });
 
     ctx.brew = options;

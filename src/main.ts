@@ -82,7 +82,10 @@ export async function setupSystem(options: TCombinedContext) {
             {
               title: 'Install Brew',
               task: () => installBrew(ctx, task, password!),
-              skip: () => !!ctx.brew && 'Fish already installed',
+              skip: () =>
+                options.brew &&
+                isBoolean(options.brew) &&
+                'Fish already installed',
             },
             {
               title: 'Install Brew Apps',
@@ -98,7 +101,9 @@ export async function setupSystem(options: TCombinedContext) {
                   (options.brew as TBrew).yarn as TYarn,
                 ),
               skip: () =>
-                (isBoolean(options.brew) || !options.brew.yarn) &&
+                (isBoolean(ctx.brew) ||
+                  isBoolean(options.brew) ||
+                  isBoolean(options.brew.yarn)) &&
                 'Nothing to install',
             },
           ],
@@ -107,7 +112,6 @@ export async function setupSystem(options: TCombinedContext) {
       enabled: () => !!options.brew,
       skip: (ctx: TContext) => {
         if (!ctx.fish) return 'Fish should be installed';
-        if (ctx.brew) return 'Brew already installed';
       },
     },
   ]);
