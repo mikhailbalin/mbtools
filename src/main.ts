@@ -1,4 +1,5 @@
 import Listr, { ListrTaskWrapper } from 'listr';
+import isBoolean from 'lodash/isBoolean';
 import {
   updateSystem,
   configureGit,
@@ -6,8 +7,10 @@ import {
   configureSSH,
   installBrew,
   configureFish,
+  installBrewApps,
+  installYarnApps,
 } from './commands';
-import type { TOptions, TContext } from './types';
+import type { TBrew, TCombinedContext, TContext, TYarn } from './types';
 import {
   NOTHING_HAPPENED,
   EVERYTHING_READY,
@@ -21,7 +24,7 @@ const { UPDATE, GIT, FISH, SSH, BREW } = options;
 
 const none = <T>(arr: T[], fn = Boolean) => !arr.some(fn);
 
-export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
+export async function setupSystem(options: TCombinedContext) {
   const { password, ...rest } = options;
 
   if (none(Object.values(rest))) {
@@ -74,8 +77,34 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
     {
       title: BREW.desc,
       task: (ctx: TContext, task: ListrTaskWrapper) =>
-        installBrew(ctx, task, password!),
-      enabled: () => options.brew,
+        new Listr(
+          [
+            {
+              title: 'Install Brew',
+              task: () => installBrew(ctx, task, password!),
+              skip: () => !!ctx.brew && 'Fish already installed',
+            },
+            {
+              title: 'Install Brew Apps',
+              task: () => installBrewApps(ctx, task, options.brew as TBrew),
+              skip: () => isBoolean(options.brew) && 'Nothing to install',
+            },
+            {
+              title: 'Install Yarn Apps',
+              task: () =>
+                installYarnApps(
+                  ctx,
+                  task,
+                  (options.brew as TBrew).yarn as TYarn,
+                ),
+              skip: () =>
+                isBoolean(options.brew) ||
+                (isBoolean(options.brew.yarn) && 'Nothing to install'),
+            },
+          ],
+          { concurrent: true },
+        ),
+      enabled: () => !!options.brew,
       skip: (ctx: TContext) => {
         if (!ctx.fish) return 'Fish should be installed';
         if (ctx.brew) return 'Brew already installed';

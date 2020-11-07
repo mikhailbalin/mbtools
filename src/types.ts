@@ -8,33 +8,31 @@ export type TOptions = {
   skipPrompts: boolean;
 };
 
-export type TYarn =
-  | {
-      serve: boolean;
-      lerna: boolean;
-      pkg: boolean;
-      uuid: boolean;
-      '@vue/cli': boolean;
-      'json-server': boolean;
-      'gatsby-cli': boolean;
-      'npm-check-updates': boolean;
-      'package-size': boolean;
-    }
-  | boolean;
+export type TYarn = {
+  serve: boolean;
+  lerna: boolean;
+  pkg: boolean;
+  uuid: boolean;
+  '@vue/cli': boolean;
+  'json-server': boolean;
+  'gatsby-cli': boolean;
+  'npm-check-updates': boolean;
+  'package-size': boolean;
+};
+
+export type TBrew = {
+  node: boolean;
+  yarn: TYarn | boolean;
+  php: boolean;
+  imagemagick: boolean;
+  ffmpeg: boolean;
+  'azure-cli': boolean;
+  'git-lfs': boolean;
+  'git-flow-avh': boolean;
+};
 
 export type TContext = Pick<TOptions, 'git' | 'ssh' | 'fish'> & {
-  brew:
-    | {
-        node: boolean;
-        yarn: TYarn;
-        php: boolean;
-        imagemagick: boolean;
-        ffmpeg: boolean;
-        'azure-cli': boolean;
-        'git-lfs': boolean;
-        'git-flow-avh': boolean;
-      }
-    | boolean;
+  brew: TBrew | boolean;
   display: boolean;
 };
 
