@@ -13,7 +13,9 @@ export async function installYarnApps(
     const appsToInstall = keys(pickBy(options));
 
     task.output = 'Installing Yarn apps...';
-    await execa.command(`yarn global add ${appsToInstall}`, { shell: 'fish' });
+    await execa.command(`yarn global add ${appsToInstall.join(' ')}`, {
+      shell: 'fish',
+    });
 
     (ctx.brew as TBrew).yarn = options;
   } catch (error) {

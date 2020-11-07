@@ -16,7 +16,9 @@ export async function installBrewApps(
     await execa.command('brew update', { shell: 'fish' });
 
     task.output = 'Installing Brew apps...';
-    await execa.command(`brew install ${appsToInstall}`, { shell: 'fish' });
+    await execa.command(`brew install ${appsToInstall.join(' ')}`, {
+      shell: 'fish',
+    });
 
     ctx.brew = options;
   } catch (error) {
