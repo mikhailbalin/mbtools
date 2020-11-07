@@ -98,8 +98,8 @@ export async function setupSystem(options: TCombinedContext) {
                   (options.brew as TBrew).yarn as TYarn,
                 ),
               skip: () =>
-                isBoolean(options.brew) ||
-                (isBoolean(options.brew.yarn) && 'Nothing to install'),
+                (isBoolean(options.brew) || !options.brew.yarn) &&
+                'Nothing to install',
             },
           ],
           { concurrent: true },
