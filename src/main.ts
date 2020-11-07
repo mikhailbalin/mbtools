@@ -1,5 +1,6 @@
 import Listr, { ListrTaskWrapper } from 'listr';
-// import isBoolean from 'lodash/isBoolean';
+import isBoolean from 'lodash/isBoolean';
+import isObject from 'lodash/isObject';
 import {
   updateSystem,
   configureGit,
@@ -88,15 +89,22 @@ export async function setupSystem(options: TCombinedContext) {
             title: 'Install Brew Apps',
             task: (_, task: ListrTaskWrapper) =>
               installBrewApps(ctx, task, options.brew as TBrew),
-            skip: () => true,
-            // !!ctx.brew && 'Nothing to install',
+            skip: () => {
+              if (!ctx.brew) return "Brew isn't installed";
+              if (isBoolean(options.brew)) return 'Nothing selected to install';
+            },
           },
           {
             title: 'Install Yarn Apps',
             task: (_, task: ListrTaskWrapper) =>
               installYarnApps(ctx, task, (options.brew as TBrew).yarn as TYarn),
-            skip: () => true,
-            // !isBoolean(ctx.brew) && ctx.brew.yarn && 'Nothing to install',
+            skip: () => {
+              if (!ctx.brew) return "Brew isn't installed";
+              if (isObject(ctx.brew) && !ctx.brew.yarn)
+                return "Yarn isn't installed";
+              if (isObject(options.brew) && isBoolean(options.brew.yarn))
+                return 'Nothing selected to install';
+            },
           },
         ]),
       enabled: () => !!options.brew,
