@@ -1,10 +1,18 @@
-import { parseArgumentsIntoOptions } from './utils';
+export interface IArguments {
+  password: string | undefined;
+  update: boolean;
+  git: boolean;
+  ssh: boolean;
+  fish: boolean;
+  brew: boolean;
+  skipPrompts: boolean;
+}
 
-export type TOptions = ReturnType<typeof parseArgumentsIntoOptions>;
-export type TContext = Pick<TOptions, 'fish' | 'ssh' | 'git'> & {
+export type TContext = Pick<IArguments, 'git' | 'ssh' | 'fish'> & {
   display: boolean;
-  homebrew: {
-    brew: boolean;
-    yarn: boolean;
-  };
+  brew:
+    | {
+        yarn: boolean;
+      }
+    | false;
 };
