@@ -48,22 +48,19 @@ export async function setupSystem(options: TCombinedContext) {
     {
       title: FISH.desc,
       task: (ctx: TContext) =>
-        new Listr(
-          [
-            {
-              title: 'Install',
-              task: (_, task: ListrTaskWrapper) =>
-                installFish(ctx, task, password!),
-              skip: () => ctx.fish && 'Fish already installed',
-            },
-            {
-              title: 'Configure',
-              task: (_, task: ListrTaskWrapper) =>
-                configureFish(ctx, task, password!),
-            },
-          ],
-          { concurrent: true },
-        ),
+        new Listr([
+          {
+            title: 'Install',
+            task: (_, task: ListrTaskWrapper) =>
+              installFish(ctx, task, password!),
+            skip: () => ctx.fish && 'Fish already installed',
+          },
+          {
+            title: 'Configure',
+            task: (_, task: ListrTaskWrapper) =>
+              configureFish(ctx, task, password!),
+          },
+        ]),
       enabled: () => options.fish,
     },
     {
