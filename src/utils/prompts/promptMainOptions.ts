@@ -1,14 +1,9 @@
 import inquirer from 'inquirer';
-import {
-  READY,
-  ARG_BREW,
-  ARG_FISH,
-  ARG_GIT,
-  ARG_SSH,
-  ARG_UPDATE,
-} from '../../constants';
+import { READY, options } from '../../constants';
 import { config } from '../../config';
 import { TOptions } from '../../types';
+
+const { UPDATE, GIT, FISH, SSH, BREW } = options;
 
 export const promptMainOptions = async ({
   update,
@@ -24,30 +19,30 @@ export const promptMainOptions = async ({
       message: 'What would you like to do?',
       choices: [
         {
-          name: 'Update system',
-          value: ARG_UPDATE,
+          name: UPDATE.desc,
+          value: UPDATE.arg,
           checked: update,
         },
         {
-          name: 'Configure git',
-          value: ARG_GIT,
+          name: GIT.desc,
+          value: GIT.arg,
           checked: git,
-          disabled: config.get(ARG_GIT) && READY,
+          disabled: config.get(GIT.arg) && READY,
         },
         {
-          name: 'Configure or install fish',
-          value: ARG_FISH,
+          name: FISH.desc,
+          value: FISH.arg,
           checked: fish,
         },
         {
-          name: 'Configure ssh',
-          value: ARG_SSH,
+          name: SSH.desc,
+          value: SSH.arg,
           checked: ssh,
-          disabled: config.get(ARG_SSH) && READY,
+          disabled: config.get(SSH.arg) && READY,
         },
         {
-          name: 'Install Brew',
-          value: ARG_BREW,
+          name: BREW.desc,
+          value: BREW.arg,
           checked: brew,
         },
       ],

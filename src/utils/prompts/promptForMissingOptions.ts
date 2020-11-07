@@ -1,15 +1,11 @@
-import {
-  ARG_BREW,
-  ARG_FISH,
-  ARG_GIT,
-  ARG_SSH,
-  ARG_UPDATE,
-} from '../../constants';
+import { options } from '../../constants';
 import keys from 'lodash/keys';
 import pickBy from 'lodash/pickBy';
 import type { TOptions } from '../../types';
 import { promptMainOptions } from './promptMainOptions';
 import { promptPassword } from './promptPassword';
+
+const { UPDATE, GIT, FISH, SSH, BREW } = options;
 
 const includesAny = <T>(arr: T[], values: T[]) =>
   values.some((v) => arr.includes(v));
@@ -18,10 +14,10 @@ export default async function promptForMissingOptions(
   options: TOptions,
 ): Promise<Omit<TOptions, 'skipPrompts'>> {
   const { password: passwordOption, skipPrompts, ...mainOptions } = options;
-  const passwordRequireOptions = [ARG_UPDATE, ARG_FISH, ARG_BREW];
+  const passwordRequireOptions = [UPDATE.arg, FISH.arg, BREW.arg];
 
-  const mainAnswers: string[] | null = skipPrompts
-    ? null
+  const mainAnswers: string[] | undefined = skipPrompts
+    ? undefined
     : await promptMainOptions(mainOptions);
 
   const shouldAskPassword =
@@ -29,7 +25,7 @@ export default async function promptForMissingOptions(
       includesAny(passwordRequireOptions, keys(pickBy(mainOptions)))) &&
     !passwordOption;
 
-  const password: string | null = shouldAskPassword
+  const password: string | undefined = shouldAskPassword
     ? await promptPassword()
     : passwordOption;
 
@@ -39,10 +35,10 @@ export default async function promptForMissingOptions(
 
   return {
     password,
-    update: getOptionValue(ARG_UPDATE),
-    git: getOptionValue(ARG_GIT),
-    ssh: getOptionValue(ARG_SSH),
-    fish: getOptionValue(ARG_FISH),
-    brew: getOptionValue(ARG_BREW),
+    update: getOptionValue(UPDATE.arg),
+    git: getOptionValue(GIT.arg),
+    fish: getOptionValue(FISH.arg),
+    ssh: getOptionValue(SSH.arg),
+    brew: getOptionValue(BREW.arg),
   };
 }
