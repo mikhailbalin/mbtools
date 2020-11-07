@@ -20,7 +20,7 @@ export const options = {
   },
   FISH: {
     arg: 'fish',
-    desc: 'Install or/and configure fish',
+    desc: 'Install or/and configure Fish',
   },
   SSH: {
     arg: 'ssh',
@@ -28,7 +28,7 @@ export const options = {
   },
   BREW: {
     arg: 'brew',
-    desc: 'Install brew and apps',
+    desc: 'Install Brew and apps',
   },
   PASSWORD: {
     arg: 'password',

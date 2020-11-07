@@ -13,8 +13,11 @@ import {
   NOTHING_HAPPENED,
   EVERYTHING_READY,
   SOMETHING_BROKE,
+  options,
 } from './constants';
 import { config } from './config';
+
+const { UPDATE, GIT, FISH, SSH, BREW } = options;
 
 const none = <T>(arr: T[], fn = Boolean) => !arr.some(fn);
 
@@ -28,28 +31,28 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
 
   const tasks = new Listr([
     {
-      title: 'System update',
+      title: UPDATE.desc,
       task: (_, task: ListrTaskWrapper) => updateSystem(task, password!),
       enabled: () => options.update,
     },
     {
-      title: 'Initialize git',
+      title: GIT.desc,
       task: (ctx: TContext, task: ListrTaskWrapper) => configureGit(ctx, task),
       enabled: () => options.git,
       skip: (ctx: TContext) => ctx.git && 'Git already configured',
     },
     {
-      title: 'Configure fish',
+      title: FISH.desc,
       task: (ctx: TContext, task: ListrTaskWrapper) =>
         new Listr(
           [
             {
-              title: 'Install fish',
+              title: 'Install',
               task: () => installFish(ctx, task, password!),
               skip: () => ctx.fish && 'Fish already installed',
             },
             {
-              title: 'Setup configs',
+              title: 'Configure',
               task: () => configureFish(ctx, task, password!),
             },
           ],
@@ -58,7 +61,7 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
       enabled: () => options.fish,
     },
     {
-      title: 'Configure SSH',
+      title: SSH.desc,
       task: (ctx: TContext, task: ListrTaskWrapper) => configureSSH(ctx, task),
       enabled: () => options.ssh,
       skip: (ctx: TContext) => {
@@ -69,13 +72,13 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
       },
     },
     {
-      title: 'Install Brew',
+      title: BREW.desc,
       task: (ctx: TContext, task: ListrTaskWrapper) =>
         installBrew(ctx, task, password!),
       enabled: () => options.brew,
       skip: (ctx: TContext) => {
         if (!ctx.fish) return 'Fish should be installed';
-        if (ctx.homebrew.brew) return 'Brew already installed';
+        if (ctx.brew) return 'Brew already installed';
       },
     },
   ]);
