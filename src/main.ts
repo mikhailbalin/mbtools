@@ -1,5 +1,4 @@
 import Listr, { ListrTaskWrapper } from 'listr';
-import chalk from 'chalk';
 import {
   updateSystem,
   configureGit,
