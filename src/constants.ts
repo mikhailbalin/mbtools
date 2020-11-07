@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 
-const status = {
+export const status = {
   DONE: chalk.green.bold('DONE'),
   ERROR: chalk.red.bold('ERROR'),
 } as const;

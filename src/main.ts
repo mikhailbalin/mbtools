@@ -14,6 +14,7 @@ import {
   EVERYTHING_READY,
   SOMETHING_BROKE,
   options,
+  status,
 } from './constants';
 import { config } from './config';
 
@@ -89,7 +90,7 @@ export async function setupSystem(options: Omit<TOptions, 'skipPrompts'>) {
     console.info(`\n${EVERYTHING_READY}`);
   } catch (error) {
     if (error.message) {
-      console.error(`\n${chalk.red.bold('ERROR')} ${error.message}`);
+      console.error(`\n${status.ERROR} ${error.message}`);
     } else {
       console.error(`\n${SOMETHING_BROKE}`);
     }
