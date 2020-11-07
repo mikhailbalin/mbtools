@@ -34,7 +34,7 @@ export async function installBrew(
 
     setFishConfig('config', set(cloneDeep(ctx), 'homebrew.brew', true));
 
-    ctx.homebrew.brew = true;
+    ctx.brew = true;
   } catch (error) {
     task.skip(error.message);
   }
