@@ -30,8 +30,6 @@ export const promptYarnAppsOptions = async (): Promise<TYarn | boolean> => {
     },
   ] as const;
 
-  console.log(config.get(`brew.yarn`), config.get(`brew.yarn.asc`));
-
   const { apps }: { apps: string[] } = await inquirer.prompt(questions);
 
   return apps.length > 0
