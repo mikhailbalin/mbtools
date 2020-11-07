@@ -5,18 +5,20 @@ import ejs from 'ejs';
 import type { TContext } from '../../types';
 
 const setFishConfig = async (fileName: string, config: TContext) => {
-  const teplateName = `${fileName}.fish.ejs`;
   const configPath = path.join(
     os.homedir(),
     '.config',
     'fish',
     fileName !== 'config' ? `functions/${fileName}.fish` : `${fileName}.fish`,
   );
+
+  const teplateName = `${fileName}.fish.ejs`;
+
   const templatePath = path.join(
     __dirname,
     '..',
     '..',
-    `templates`,
+    'templates',
     teplateName,
   );
 
@@ -25,8 +27,8 @@ const setFishConfig = async (fileName: string, config: TContext) => {
     if (!template) throw new Error(`${teplateName} template is not found`);
     const content = await ejs.render(template, config, { async: true });
     await writeAsync(configPath, content);
-  } catch {
-    throw new Error(`Error setting ${teplateName} template`);
+  } catch (error) {
+    throw new Error(error.message ?? `Error setting ${teplateName} template`);
   }
 };
 
