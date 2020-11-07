@@ -11,7 +11,7 @@ export const promptMainOptions = async ({
   fish,
   ssh,
   brew,
-}: Omit<TOptions, 'skipPrompts' | 'password'>) => {
+}: Omit<TOptions, 'skipPrompts' | 'password'>): Promise<string[]> => {
   const questions = [
     {
       type: 'checkbox',
