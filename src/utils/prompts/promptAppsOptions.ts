@@ -2,6 +2,7 @@ import inquirer from 'inquirer';
 import { config } from '../../config';
 import { READY } from '../../constants';
 import { TContext } from '../../types';
+import { promptYarnAppsOptions } from './promptYarnAppsOptions';
 
 export const promptAppsOptions = async (): Promise<TContext['brew']> => {
   const questions = [
@@ -13,58 +14,69 @@ export const promptAppsOptions = async (): Promise<TContext['brew']> => {
         {
           name: 'Node',
           value: 'node',
+          checked: !!config.get('brew.node'),
           disabled: config.get('brew.node') && READY,
         },
         {
           name: 'Yarn',
           value: 'yarn',
+          checked: !!config.get('brew.yarn'),
           disabled: config.get('brew.yarn') && READY,
         },
         {
           name: 'PHP',
           value: 'php',
+          checked: !!config.get('brew.php'),
           disabled: config.get('brew.php') && READY,
         },
         {
           name: 'ImageMagick',
           value: 'imagemagick',
+          checked: !!config.get('brew.imagemagick'),
           disabled: config.get('brew.imagemagick') && READY,
         },
         {
           name: 'FFmpeg',
           value: 'ffmpeg',
+          checked: !!config.get('brew.ffmpeg'),
           disabled: config.get('brew.ffmpeg') && READY,
         },
         {
           name: 'Azure CLI',
           value: 'azure-cli',
-          disabled: config.get('brew.azure-cli') && READY,
+          checked: !!config.get("brew['azure-cli']"),
+          disabled: config.get("brew['azure-cli']") && READY,
         },
         {
           name: 'Git LFS',
           value: 'git-lfs',
-          disabled: config.get('brew.git-lfs') && READY,
+          checked: !!config.get("brew['git-lfs']"),
+          disabled: config.get("brew['git-lfs']") && READY,
         },
         {
           name: 'Git Flow',
           value: 'git-flow-avh',
-          disabled: config.get('brew.git-flow-avh') && READY,
+          checked: !!config.get("brew['git-flow-avh']"),
+          disabled: config.get("brew['git-flow-avh']") && READY,
         },
       ],
     },
   ] as const;
 
-  const result: { apps: string[] } = await inquirer.prompt(questions);
-  return result.apps.length > 0
+  const { apps }: { apps: string[] } = await inquirer.prompt(questions);
+
+  const yarn = apps.includes('yarn') && (await promptYarnAppsOptions());
+
+  return apps.length > 0
     ? {
-        node: result.apps.includes('node'),
-        yarn: result.apps.includes('yarn'),
-        php: result.apps.includes('php'),
-        imagemagick: result.apps.includes('imagemagick'),
-        ffmpeg: result.apps.includes('ffmpeg'),
-        'azure-cli': result.apps.includes('azure-cli'),
-        'git-lfs': result.apps.includes('git-lfs'),
-        'git-flow-avh': result.apps.includes('git-flow-avh'),
+        node: apps.includes('node'),
+        yarn,
+        php: apps.includes('php'),
+        imagemagick: apps.includes('imagemagick'),
+        ffmpeg: apps.includes('ffmpeg'),
+        'azure-cli': apps.includes('azure-cli'),
+        'git-lfs': apps.includes('git-lfs'),
+        'git-flow-avh': apps.includes('git-flow-avh'),
       }
     : true;
 };
