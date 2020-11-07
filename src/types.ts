@@ -35,3 +35,5 @@ export type TContext = Pick<TOptions, 'git' | 'ssh' | 'fish'> & {
     | boolean;
   display: boolean;
 };
+
+export type TCombinedContext = Pick<TOptions, 'password' | 'update'> & TContext;
