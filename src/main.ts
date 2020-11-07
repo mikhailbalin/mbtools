@@ -47,17 +47,19 @@ export async function setupSystem(options: TCombinedContext) {
     },
     {
       title: FISH.desc,
-      task: (ctx: TContext, task: ListrTaskWrapper) =>
+      task: (ctx: TContext) =>
         new Listr(
           [
             {
               title: 'Install',
-              task: () => installFish(ctx, task, password!),
+              task: (_, task: ListrTaskWrapper) =>
+                installFish(ctx, task, password!),
               skip: () => ctx.fish && 'Fish already installed',
             },
             {
               title: 'Configure',
-              task: () => configureFish(ctx, task, password!),
+              task: (_, task: ListrTaskWrapper) =>
+                configureFish(ctx, task, password!),
             },
           ],
           { concurrent: true },
@@ -83,7 +85,7 @@ export async function setupSystem(options: TCombinedContext) {
             title: 'Install Brew',
             task: (_, task: ListrTaskWrapper) =>
               installBrew(ctx, task, password!),
-            skip: () => !!ctx.brew && 'Fish already installed',
+            skip: () => !!ctx.brew && 'Brew already installed',
           },
           {
             title: 'Install Brew Apps',
