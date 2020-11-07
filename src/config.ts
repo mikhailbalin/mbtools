@@ -8,14 +8,12 @@ import { TContext } from './types';
 dotenv.config();
 
 const configFile = path.join(os.homedir(), 'mbtools.json');
+
 const initialContext: TContext = {
   git: false,
-  fish: false,
   ssh: false,
-  homebrew: {
-    brew: false,
-    yarn: false,
-  },
+  fish: false,
+  brew: false,
   display: false,
 };
 

@@ -24,7 +24,7 @@ export type TContext = Pick<TOptions, 'git' | 'ssh' | 'fish'> & {
               'npm-check-updates': boolean;
               'package-size': boolean;
             }
-          | false;
+          | boolean;
         php: boolean;
         imagemagick: boolean;
         ffmpeg: boolean;
@@ -32,6 +32,6 @@ export type TContext = Pick<TOptions, 'git' | 'ssh' | 'fish'> & {
         'git-lfs': boolean;
         'git-flow-avh': boolean;
       }
-    | false;
+    | boolean;
   display: boolean;
 };
