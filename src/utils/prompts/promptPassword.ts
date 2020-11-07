@@ -1,4 +1,7 @@
 import inquirer from 'inquirer';
+import { options } from '../../constants';
+
+const { PASSWORD } = options;
 
 const passwordValidator = async (input: string) => {
   if (input === '') return 'Password should not be empty.';
@@ -7,9 +10,9 @@ const passwordValidator = async (input: string) => {
 
 export const promptPassword = async () => {
   const resault = await inquirer.prompt({
-    type: 'password',
-    name: 'password',
-    message: 'WSL password?',
+    type: PASSWORD.arg,
+    name: PASSWORD.arg,
+    message: `${PASSWORD.desc}?`,
     validate: passwordValidator,
   });
 
