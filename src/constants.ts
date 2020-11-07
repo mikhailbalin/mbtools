@@ -8,10 +8,32 @@ const status = {
 export const NOTHING_HAPPENED = `${status.DONE} Nothing happened`;
 export const EVERYTHING_READY = `${status.DONE} Everything ready`;
 export const SOMETHING_BROKE = `${status.ERROR} Something broke`;
-export const ARG_UPDATE = 'update';
-export const ARG_GIT = 'git';
-export const ARG_FISH = 'fish';
-export const ARG_SSH = 'ssh';
-export const ARG_BREW = 'brew';
-export const ARG_PASSWORD = 'password';
+
+export const options = {
+  UPDATE: {
+    arg: 'update',
+    desc: 'Update system',
+  },
+  GIT: {
+    arg: 'git',
+    desc: 'Configure git',
+  },
+  FISH: {
+    arg: 'fish',
+    desc: 'Install or/and configure fish',
+  },
+  SSH: {
+    arg: 'ssh',
+    desc: 'Configure ssh',
+  },
+  BREW: {
+    arg: 'brew',
+    desc: 'Install brew and apps',
+  },
+  PASSWORD: {
+    arg: 'password',
+    desc: 'WSL password',
+  },
+} as const;
+
 export const READY = 'ready';

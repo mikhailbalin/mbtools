@@ -1,47 +1,47 @@
 import yargs from 'yargs';
-import {
-  ARG_BREW,
-  ARG_FISH,
-  ARG_GIT,
-  ARG_PASSWORD,
-  ARG_SSH,
-  ARG_UPDATE,
-} from '../constants';
+import { options } from '../constants';
 import type { TOptions } from '../types';
+
+const { UPDATE, GIT, FISH, SSH, BREW, PASSWORD } = options;
 
 function parseArgumentsIntoOptions(rawArgs: string[]): TOptions {
   const argv = yargs(rawArgs.slice(2))
     .usage('Usage: DROPBOX_ACCESS_TOKEN=[string] $0 -p [string]')
     .options({
-      [ARG_UPDATE]: {
+      [PASSWORD.arg]: {
+        type: 'string',
+        alias: 'p',
+        desc: PASSWORD.desc,
+      },
+      [UPDATE.arg]: {
         type: 'boolean',
         alias: 'u',
         default: false,
-        desc: 'Update system',
+        desc: UPDATE.desc,
       },
-      [ARG_GIT]: {
+      [GIT.arg]: {
         type: 'boolean',
         alias: 'g',
         default: false,
-        desc: 'Configure git',
+        desc: GIT.desc,
       },
-      [ARG_FISH]: {
+      [FISH.arg]: {
         type: 'boolean',
         alias: 'f',
         default: false,
-        desc: 'Install or/and configure fish',
+        desc: FISH.desc,
       },
-      [ARG_SSH]: {
+      [SSH.arg]: {
         type: 'boolean',
         alias: 's',
         default: false,
-        desc: 'Configure fish',
+        desc: SSH.desc,
       },
-      [ARG_BREW]: {
+      [BREW.arg]: {
         type: 'boolean',
         alias: 'b',
         default: false,
-        desc: 'Install fish and apps',
+        desc: BREW.desc,
       },
       yes: {
         type: 'boolean',
@@ -49,7 +49,6 @@ function parseArgumentsIntoOptions(rawArgs: string[]): TOptions {
         default: false,
         desc: "Don't prompt for missing options",
       },
-      [ARG_PASSWORD]: { type: 'string', alias: 'p', desc: 'WSL password' },
     }).argv;
 
   return {
