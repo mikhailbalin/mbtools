@@ -1,10 +1,10 @@
 import inquirer from 'inquirer';
 import { config } from '../../config';
 import { READY } from '../../constants';
-import { TContext } from '../../types';
+import { TBrew } from '../../types';
 import { promptYarnAppsOptions } from './promptYarnAppsOptions';
 
-export const promptAppsOptions = async (): Promise<TContext['brew']> => {
+export const promptAppsOptions = async (): Promise<TBrew | boolean> => {
   const questions = [
     {
       type: 'checkbox',

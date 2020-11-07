@@ -3,7 +3,7 @@ import { config } from '../../config';
 import { READY } from '../../constants';
 import { TYarn } from '../../types';
 
-export const promptYarnAppsOptions = async (): Promise<TYarn> => {
+export const promptYarnAppsOptions = async (): Promise<TYarn | boolean> => {
   const questions = [
     {
       type: 'checkbox',
