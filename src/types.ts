@@ -13,6 +13,7 @@ export type TYarn = {
   lerna: boolean;
   pkg: boolean;
   uuid: boolean;
+  tldr: boolean;
   '@vue/cli': boolean;
   'json-server': boolean;
   'gatsby-cli': boolean;

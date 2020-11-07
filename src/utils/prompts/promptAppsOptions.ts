@@ -4,62 +4,28 @@ import { READY } from '../../constants';
 import { TBrew } from '../../types';
 import { promptYarnAppsOptions } from './promptYarnAppsOptions';
 
+const brewApps: { name: string; value: keyof TBrew }[] = [
+  { name: 'Node', value: 'node' },
+  { name: 'Yarn', value: 'yarn' },
+  { name: 'PHP', value: 'php' },
+  { name: 'ImageMagick', value: 'imagemagick' },
+  { name: 'FFmpeg', value: 'ffmpeg' },
+  { name: 'Azure CLI', value: 'azure-cli' },
+  { name: 'Git LFS', value: 'git-lfs' },
+  { name: 'Git Flow', value: 'git-flow-avh' },
+];
+
 export const promptAppsOptions = async (): Promise<TBrew | boolean> => {
   const questions = [
     {
       type: 'checkbox',
       name: 'apps',
       message: 'What Brew apps would you like to install?',
-      choices: [
-        {
-          name: 'Node',
-          value: 'node',
-          checked: !!config.get('brew.node'),
-          disabled: !!config.get('brew.node') && READY,
-        },
-        {
-          name: 'Yarn',
-          value: 'yarn',
-          checked: !!config.get('brew.yarn'),
-          disabled: !!config.get('brew.yarn') && READY,
-        },
-        {
-          name: 'PHP',
-          value: 'php',
-          checked: !!config.get('brew.php'),
-          disabled: !!config.get('brew.php') && READY,
-        },
-        {
-          name: 'ImageMagick',
-          value: 'imagemagick',
-          checked: !!config.get('brew.imagemagick'),
-          disabled: !!config.get('brew.imagemagick') && READY,
-        },
-        {
-          name: 'FFmpeg',
-          value: 'ffmpeg',
-          checked: !!config.get('brew.ffmpeg'),
-          disabled: !!config.get('brew.ffmpeg') && READY,
-        },
-        {
-          name: 'Azure CLI',
-          value: 'azure-cli',
-          checked: !!config.get('brew.azure-cli'),
-          disabled: !!config.get('brew.azure-cli') && READY,
-        },
-        {
-          name: 'Git LFS',
-          value: 'git-lfs',
-          checked: !!config.get('brew.git-lfs'),
-          disabled: !!config.get('brew.git-lfs') && READY,
-        },
-        {
-          name: 'Git Flow',
-          value: 'git-flow-avh',
-          checked: !!config.get('brew.git-flow-avh'),
-          disabled: !!config.get('brew.git-flow-avh') && READY,
-        },
-      ],
+      choices: brewApps.map((app) => ({
+        name: app.name,
+        value: app.value,
+        disabled: !!config.get(`brew.${app.value}`) && READY,
+      })),
     },
   ] as const;
 
