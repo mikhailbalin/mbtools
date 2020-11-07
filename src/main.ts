@@ -1,5 +1,5 @@
 import Listr, { ListrTaskWrapper } from 'listr';
-import isBoolean from 'lodash/isBoolean';
+// import isBoolean from 'lodash/isBoolean';
 import {
   updateSystem,
   configureGit,
@@ -76,39 +76,29 @@ export async function setupSystem(options: TCombinedContext) {
     },
     {
       title: BREW.desc,
-      task: (ctx: TContext, task: ListrTaskWrapper) =>
-        new Listr(
-          [
-            {
-              title: 'Install Brew',
-              task: () => installBrew(ctx, task, password!),
-              skip: () =>
-                options.brew &&
-                isBoolean(options.brew) &&
-                'Fish already installed',
-            },
-            {
-              title: 'Install Brew Apps',
-              task: () => installBrewApps(ctx, task, options.brew as TBrew),
-              skip: () => isBoolean(options.brew) && 'Nothing to install',
-            },
-            {
-              title: 'Install Yarn Apps',
-              task: () =>
-                installYarnApps(
-                  ctx,
-                  task,
-                  (options.brew as TBrew).yarn as TYarn,
-                ),
-              skip: () =>
-                (isBoolean(ctx.brew) ||
-                  isBoolean(options.brew) ||
-                  isBoolean(options.brew.yarn)) &&
-                'Nothing to install',
-            },
-          ],
-          { concurrent: true },
-        ),
+      task: (ctx: TContext) =>
+        new Listr([
+          {
+            title: 'Install Brew',
+            task: (_, task: ListrTaskWrapper) =>
+              installBrew(ctx, task, password!),
+            skip: () => !!ctx.brew && 'Fish already installed',
+          },
+          {
+            title: 'Install Brew Apps',
+            task: (_, task: ListrTaskWrapper) =>
+              installBrewApps(ctx, task, options.brew as TBrew),
+            skip: () => true,
+            // !!ctx.brew && 'Nothing to install',
+          },
+          {
+            title: 'Install Yarn Apps',
+            task: (_, task: ListrTaskWrapper) =>
+              installYarnApps(ctx, task, (options.brew as TBrew).yarn as TYarn),
+            skip: () => true,
+            // !isBoolean(ctx.brew) && ctx.brew.yarn && 'Nothing to install',
+          },
+        ]),
       enabled: () => !!options.brew,
       skip: (ctx: TContext) => {
         if (!ctx.fish) return 'Fish should be installed';

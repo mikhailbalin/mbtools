@@ -32,7 +32,7 @@ export async function installBrew(
       `ln -s ${path.join(homebrewDir, 'bin', 'brew')} ${binDir}`,
     );
 
-    setFishConfig('config', set(cloneDeep(ctx), 'homebrew.brew', true));
+    setFishConfig('config', set(cloneDeep(ctx), 'brew', true));
 
     ctx.brew = true;
   } catch (error) {
