@@ -8,7 +8,7 @@ export type TOptions = {
   skipPrompts: boolean;
 };
 
-export type TContext = Pick<IArguments, 'git' | 'ssh' | 'fish'> & {
+export type TContext = Pick<TOptions, 'git' | 'ssh' | 'fish'> & {
   brew:
     | {
         node: boolean;
