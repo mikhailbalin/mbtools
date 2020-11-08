@@ -1,6 +1,6 @@
 {
   "name": "@mishabalin/mbtools",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A CLI to bootstrap my dev tools",
   "types": "lib/types",
   "main": "lib/index.js",
