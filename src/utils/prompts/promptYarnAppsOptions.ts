@@ -21,7 +21,7 @@ export const promptYarnAppsOptions = async (): Promise<TYarn | boolean> => {
     {
       type: 'checkbox',
       name: 'apps',
-      message: 'What Yarn apps would you like to install?',
+      message: 'Yarn apps to install?',
       choices: yarnApps.map((app) => ({
         name: app,
         value: app,

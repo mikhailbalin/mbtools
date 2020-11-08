@@ -4,6 +4,7 @@ import keys from 'lodash/keys';
 import pickBy from 'lodash/pickBy';
 import cloneDeep from 'lodash/cloneDeep';
 import isObject from 'lodash/isObject';
+import omit from 'lodash/omit';
 import { TBrew, TContext } from '../types';
 import { setFishConfig } from './installFish';
 
@@ -13,8 +14,15 @@ export async function installBrewApps(
   options: TBrew,
 ) {
   try {
-    const truthyOptions = pickBy(options);
+    let truthyOptions = pickBy(options);
+
+    if (isObject(ctx.brew) && !!ctx.brew.yarn) {
+      truthyOptions = omit(truthyOptions, ['yarn']);
+    }
+
     const appsToInstall = keys(truthyOptions);
+
+    if (appsToInstall.length === 0) task.skip('Nothing to install');
 
     task.output = 'Updating Brew...';
     await execa.command('brew update', { shell: 'fish' });

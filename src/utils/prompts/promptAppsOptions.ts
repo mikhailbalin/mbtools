@@ -6,7 +6,7 @@ import { promptYarnAppsOptions } from './promptYarnAppsOptions';
 
 const brewApps: { name: string; value: keyof TBrew }[] = [
   { name: 'Node', value: 'node' },
-  { name: 'Yarn', value: 'yarn' },
+  { name: 'Yarn and apps', value: 'yarn' },
   { name: 'PHP', value: 'php' },
   { name: 'ImageMagick', value: 'imagemagick' },
   { name: 'FFmpeg', value: 'ffmpeg' },
@@ -20,7 +20,7 @@ export const promptAppsOptions = async (): Promise<TBrew | boolean> => {
     {
       type: 'checkbox',
       name: 'apps',
-      message: 'What Brew apps would you like to install?',
+      message: 'Brew apps to install?',
       choices: brewApps.map((app) => ({
         name: app.name,
         value: app.value,
