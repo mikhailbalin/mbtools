@@ -16,7 +16,6 @@
       "preLaunchTask": "compile",
       "outFiles": ["${workspaceFolder}/lib/**/*.js"],
       "sourceMaps": true,
-      "protocol": "inspector",
       "smartStep": true,
       "console": "integratedTerminal"
     }
